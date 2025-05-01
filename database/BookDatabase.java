@@ -19,6 +19,7 @@ public class BookDatabase {
     public static void initializeDB() {
     	String sql = "CREATE TABLE IF NOT EXISTS books ("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + "bookType TEXT NOT NULL,"
                 + "bookname TEXT NOT NULL,"
                 + "bookauthor TEXT NOT NULL,"
                 + "bookyear INTEGER NOT NULL,"
