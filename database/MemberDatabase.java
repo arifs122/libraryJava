@@ -20,7 +20,7 @@ public class MemberDatabase {
     	String sql = "CREATE TABLE IF NOT EXISTS members ("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + "membername TEXT NOT NULL,"
-                + "memberbirthyear INTEGER NOT NULL,"
+                + "memberage INTEGER NOT NULL,"
                 + "canborrow INTEGER NOT NULL DEFAULT 1 CHECK(canborrow IN (0, 1)))";
      
      try (Statement stmt = conn.createStatement()) {
