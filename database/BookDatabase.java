@@ -35,8 +35,8 @@ public class BookDatabase {
          System.exit(1);
      }
     }
-    public static void insertBook() {
-        /*public static void insertBook(String name, String author, int year) {
+    
+        public static void insertBook(String name, String author, int year) {
     String sql = "INSERT INTO books (bookname, bookauthor, bookyear, isborrowed) VALUES (?, ?, ?, ?)";
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -50,18 +50,19 @@ public class BookDatabase {
     } catch (SQLException e) {
         System.err.println("Kitap eklenirken hata oluştu: " + e.getMessage());
     }
+
 }
 
-         */
+         
 
 
 
-    }
+    
     public static void listAllBooks() {}
     public static void listLentOutBooks() {}
     public static void listAvailableBooks() {
 
-         /* 
+         
             String sql = "SELECT * FROM books WHERE isborrowed = 1";
         
             try (Statement stmt = conn.createStatement();
@@ -89,13 +90,13 @@ public class BookDatabase {
             } catch (SQLException e) {
                 System.err.println("Sorgulama hatası: " + e.getMessage());
             }
-        */
+        
         
     }
-    public static void updateBookAvailability() {
+    
 
 
-         /*public static void updateBookAvailability(int bookId, boolean isAvailable, Integer borrowerId) {
+         public static void updateBookAvailability(int bookId, boolean isAvailable, Integer borrowerId) {
             String sql = "UPDATE books SET isborrowed = ?, borrowerid = ? WHERE id = ?";
         
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -117,11 +118,11 @@ public class BookDatabase {
             } catch (SQLException e) {
                 System.err.println("Kitap güncellenirken hata oluştu: " + e.getMessage());
             }
-        }*/
+        }
 
 
 
 
-    }
+    
     
 }
