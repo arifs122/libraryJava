@@ -35,10 +35,93 @@ public class BookDatabase {
          System.exit(1);
      }
     }
-    public static void insertBook() {}
+    public static void insertBook() {
+        /*public static void insertBook(String name, String author, int year) {
+    String sql = "INSERT INTO books (bookname, bookauthor, bookyear, isborrowed) VALUES (?, ?, ?, ?)";
+
+    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        pstmt.setString(1, name);         // 1. ? yerine kitap adı gelir
+        pstmt.setString(2, author);       // 2. ? yerine yazar adı gelir
+        pstmt.setInt(3, year);            // 3. ? yerine yıl gelir
+        pstmt.setInt(4, 1);               // 4. ? yerine varsayılan olarak "ödünç alınabilir" (1)
+
+        pstmt.executeUpdate();            // Komutu çalıştırır
+        System.out.println("Kitap başarıyla eklendi.");
+    } catch (SQLException e) {
+        System.err.println("Kitap eklenirken hata oluştu: " + e.getMessage());
+    }
+}
+
+         */
+
+
+
+    }
     public static void listAllBooks() {}
     public static void listLentOutBooks() {}
-    public static void listAvailableBooks() {}
-    public static void updateBookAvailability() {}
+    public static void listAvailableBooks() {
+
+         /* 
+            String sql = "SELECT * FROM books WHERE isborrowed = 1";
+        
+            try (Statement stmt = conn.createStatement();
+                 ResultSet rs = stmt.executeQuery(sql)) {
+        
+                boolean found = false;
+        
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String name = rs.getString("bookname");
+                    String author = rs.getString("bookauthor");
+                    int year = rs.getInt("bookyear");
+        
+                    System.out.println("ID: " + id +
+                                       ", Adı: " + name +
+                                       ", Yazar: " + author +
+                                       ", Yıl: " + year);
+                    found = true;
+                }
+        
+                if (!found) {
+                    System.out.println("Müsait kitap bulunamadı.");
+                }
+        
+            } catch (SQLException e) {
+                System.err.println("Sorgulama hatası: " + e.getMessage());
+            }
+        */
+        
+    }
+    public static void updateBookAvailability() {
+
+
+         /*public static void updateBookAvailability(int bookId, boolean isAvailable, Integer borrowerId) {
+            String sql = "UPDATE books SET isborrowed = ?, borrowerid = ? WHERE id = ?";
+        
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setInt(1, isAvailable ? 1 : 0); // 1: müsait, 0: ödünçte
+                if (borrowerId != null) {
+                    pstmt.setInt(2, borrowerId);      // borrowerid verildi ise güncelle
+                } else {
+                    pstmt.setNull(2, Types.INTEGER);  // borrowerid null yapılır
+                }
+                pstmt.setInt(3, bookId);              // Hangi kitap güncelleniyor?
+        
+                int affected = pstmt.executeUpdate(); // Güncellenen satır sayısı
+                if (affected > 0) {
+                    System.out.println("Kitap başarıyla güncellendi.");
+                } else {
+                    System.out.println("Belirtilen ID'ye sahip kitap bulunamadı.");
+                }
+        
+            } catch (SQLException e) {
+                System.err.println("Kitap güncellenirken hata oluştu: " + e.getMessage());
+            }
+        }*/
+
+
+
+
+    }
     
 }
