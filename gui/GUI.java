@@ -1,4 +1,5 @@
 package gui;
+import database.BookDatabase;
 import factories.BookFactory;
 import model.Book;
 
@@ -57,7 +58,7 @@ public class GUI {
 	private CardLayout  cardLayout;
 	private JPanel homePanel;
 	private JPanel addBookPanel;
-	private JPanel listBookPanel;
+	private JPanel listAllBooksPanel;
 	private JPanel listBorrowedBooksPanel;
 	private JPanel listAvailableBooksPanel;
 	private JPanel addMemberPanel;
@@ -83,7 +84,7 @@ public class GUI {
 		createAddBookPanel();
 		//createAddMemberPanel();
 		//createListMembersPanel();
-		//createListBooksPanel();
+		//createListAllBooksPanel();
 		//createBorrowBookPanel();
 		//createReturnBookPanel();
 		//createListAvailableBooks();
@@ -137,12 +138,19 @@ public class GUI {
 		bookYearTxt.setBounds(120, 150, 100, 30);
 		addBookPanel.add(bookYearTxt);
 		addBookPanel.add(bookYearLabel);
+		JLabel borrowerLabel = new JLabel("Borrower ID");
+		borrowerLabel.setBounds(50, 200, 100, 30);
+		JTextField borrowerTxt = new JTextField();
+		borrowerTxt.setBounds(120, 200, 100, 30);
+		addBookPanel.add(borrowerTxt);
+		addBookPanel.add(borrowerLabel);
 		JLabel bookTypeLabel = new JLabel("Book Type");
-		bookTypeLabel.setBounds(50, 200, 100, 30);
+		bookTypeLabel.setBounds(50, 250, 100, 30);
 		JComboBox<String> typeComboBox = new JComboBox<>(new String[]{"novel", "encyclopedia", "poetry"});
-		typeComboBox.setBounds(120, 200, 100, 30);
+		typeComboBox.setBounds(120, 250, 100, 30);
 		addBookPanel.add(bookTypeLabel);
 		addBookPanel.add(typeComboBox);
+
 
 
 		JButton addBookButton = new JButton("Add Book");
@@ -152,9 +160,11 @@ public class GUI {
 				String name = bookNameTxt.getText();
 				String author = bookAuthorTxt.getText();
 				int year = Integer.parseInt(bookYearTxt.getText());
+				int borrowerid = Integer.parseInt(borrowerTxt.getText());
 				String type = typeComboBox.getSelectedItem().toString();
 				//book nesnesini kitap türüne göre factory design pattern ile oluşturuyoruz
 				Book book = BookFactory.create(type, name, author, year);
+				BookDatabase.insertBook(book, borrowerid);
 			}
 		});
 		addBookPanel.add(addBookButton);

@@ -1,5 +1,7 @@
 package database;
 
+import model.Book;
+
 import java.sql.*;
 /*addBook listBooks showBookInfo gibi metodlar burada olacak
  * */
@@ -19,11 +21,11 @@ public class BookDatabase {
     public static void initializeDB() {
     	String sql = "CREATE TABLE IF NOT EXISTS books ("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + "bookType TEXT NOT NULL,"
+                + "booktype TEXT NOT NULL,"
                 + "bookname TEXT NOT NULL,"
                 + "bookauthor TEXT NOT NULL,"
                 + "bookyear INTEGER NOT NULL,"
-                + "isborrowed INTEGER NOT NULL DEFAULT 1 CHECK(isborrowed IN (0, 1)),"
+                + "isborrowed INTEGER NOT NULL DEFAULT 0 CHECK(isborrowed IN (0, 1)),"
                 + "borrowerid INTEGER DEFAULT NULL)";
      
      try (Statement stmt = conn.createStatement()) {
@@ -36,14 +38,16 @@ public class BookDatabase {
      }
     }
     
-        public static void insertBook(String name, String author, int year) {
-    String sql = "INSERT INTO books (bookname, bookauthor, bookyear, isborrowed) VALUES (?, ?, ?, ?)";
+        public static void insertBook(Book book,int borrowerid) {
+    String sql = "INSERT INTO books (bookname, bookauthor, bookyear, booktype, borrowerid, isborrowed) VALUES (?, ?, ?, ?, ?, ?)";
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-        pstmt.setString(1, name);         // 1. ? yerine kitap adı gelir
-        pstmt.setString(2, author);       // 2. ? yerine yazar adı gelir
-        pstmt.setInt(3, year);            // 3. ? yerine yıl gelir
-        pstmt.setInt(4, 1);               // 4. ? yerine varsayılan olarak "ödünç alınabilir" (1)
+        pstmt.setString(1, book.getBookName());         // 1. ? yerine kitap adı gelir
+        pstmt.setString(2, book.getBookAuthor());       // 2. ? yerine yazar adı gelir
+        pstmt.setInt(3, book.getBookYear());            // 3. ? yerine yıl gelir
+        pstmt.setString(4, book.getBookType());
+        pstmt.setInt(5, borrowerid);
+        pstmt.setInt(6, 0);               // 4. ? yerine varsayılan olarak "ödünç alınabilir" (0)
 
         pstmt.executeUpdate();            // Komutu çalıştırır
         System.out.println("Kitap başarıyla eklendi.");
@@ -63,7 +67,7 @@ public class BookDatabase {
     public static void listAvailableBooks() {
 
          
-            String sql = "SELECT * FROM books WHERE isborrowed = 1";
+            String sql = "SELECT * FROM books WHERE isborrowed = 0";
         
             try (Statement stmt = conn.createStatement();
                  ResultSet rs = stmt.executeQuery(sql)) {
