@@ -7,6 +7,7 @@ import util.IconHelper;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -244,6 +245,14 @@ public class GUI {
 
 		DefaultTableModel model = BookDatabase.listAvailableBooks();
 		JTable bookTable = new JTable(model);
+		//table sutunları artık ayarlanamıyor ve kendimiz büyüklüklerini ayarladık
+		bookTable.setDefaultEditor(Object.class, null);
+		TableColumnModel columnModel = bookTable.getColumnModel();
+		int[] widths = {30, 90, 150, 120, 70, 60, 80};
+		for (int i = 0; i < widths.length; i++) {
+			columnModel.getColumn(i).setPreferredWidth(widths[i]);
+			columnModel.getColumn(i).setResizable(false);
+		}
 		JScrollPane scrollPane = new JScrollPane(bookTable);
 		scrollPane.setBounds(350, 100, 600, 250);
 		borrowBookPanel.add(scrollPane);
@@ -268,7 +277,7 @@ public class GUI {
 		lblWelcome.setBounds(140, 30, 720, 30); // x, y, width, height
 		mainFrame.add(lblWelcome);
 	}
-
+	//buttonların görünümleri için metod
 	private void setButtonLook(JButton button) {
 		button.setFocusPainted(false);
 		button.setContentAreaFilled(true);
@@ -278,6 +287,7 @@ public class GUI {
 		button.setForeground(Color.black);
 		button.setFont(new Font("Californian FB", Font.BOLD, 15));
 	}
+	//ana menünye dönmek için back buttonlarının içinde olacak metod
 	private void back(){
 		cardLayout.show(mainPanel, "HomePanel");
 		WelcomeLabel();

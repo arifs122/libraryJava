@@ -64,8 +64,15 @@ public class BookDatabase {
     
     public static void listAllBooks() {}
     public static void listLentOutBooks() {}
+    /*listeleme metodları oluşturulurken önce DefaultTableModel
+    * oluşturulup guida bu panele dönüştürülecek */
     public static DefaultTableModel listAvailableBooks() {
-        DefaultTableModel model = new DefaultTableModel();
+        DefaultTableModel model = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };//table gösterilirken hücreler artık değiştirilemeyecek
         model.addColumn("ID");
         model.addColumn("Book Type");
         model.addColumn("Book Name");
