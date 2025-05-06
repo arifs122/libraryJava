@@ -2,6 +2,7 @@ package database;
 
 import model.Book;
 
+import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 /*addBook listBooks showBookInfo gibi metodlar burada olacak
  * */
@@ -25,7 +26,7 @@ public class BookDatabase {
                 + "bookname TEXT NOT NULL,"
                 + "bookauthor TEXT NOT NULL,"
                 + "bookyear INTEGER NOT NULL,"
-                + "isborrowed INTEGER NOT NULL DEFAULT 0 CHECK(isborrowed IN (0, 1)),"
+                + "availability INTEGER NOT NULL DEFAULT 1 CHECK(availibility IN (0, 1)),"
                 + "borrowerid INTEGER DEFAULT NULL)";
      
      try (Statement stmt = conn.createStatement()) {
@@ -39,14 +40,15 @@ public class BookDatabase {
     }
     
         public static void insertBook(Book book) {
-    String sql = "INSERT INTO books (bookname, bookauthor, bookyear, booktype) VALUES (?, ?, ?, ?)";
+    String sql = "INSERT INTO books (booktype, bookname, bookauthor, bookyear) VALUES (?, ?, ?, ?)";
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-        pstmt.setString(1, book.getBookName());         // 1. ? yerine kitap adı gelir
-        pstmt.setString(2, book.getBookAuthor());       // 2. ? yerine yazar adı gelir
-        pstmt.setInt(3, book.getBookYear());            // 3. ? yerine yıl gelir
-        pstmt.setString(4, book.getBookType());
-        // borrower id ve isborrowed book oluştururken default olarak ekleniyor
+        pstmt.setString(1, book.getBookType());
+        pstmt.setString(2, book.getBookName());
+        pstmt.setString(3, book.getBookAuthor());
+        pstmt.setInt(4, book.getBookYear());
+
+        // borrower id ve availability book oluştururken default olarak ekleniyor
         pstmt.executeUpdate();            // Komutu çalıştırır
         System.out.println("Kitap başarıyla eklendi.");
     } catch (SQLException e) {
@@ -62,43 +64,40 @@ public class BookDatabase {
     
     public static void listAllBooks() {}
     public static void listLentOutBooks() {}
-    public static void listAvailableBooks() {
+    public static DefaultTableModel listAvailableBooks() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("ID");
+        model.addColumn("Book Type");
+        model.addColumn("Book Name");
+        model.addColumn("Book Author");
+        model.addColumn("Book Year");
+        model.addColumn("Availability");
+        model.addColumn("Borrower ID");
 
-         
-            String sql = "SELECT * FROM books WHERE isborrowed = 0";
-        
-            try (Statement stmt = conn.createStatement();
-                 ResultSet rs = stmt.executeQuery(sql)) {
-        
-                boolean found = false;
-        
-                while (rs.next()) {
-                    int id = rs.getInt("id");
-                    String name = rs.getString("bookname");
-                    String author = rs.getString("bookauthor");
-                    int year = rs.getInt("bookyear");
-        
-                    System.out.println("ID: " + id +
-                                       ", Adı: " + name +
-                                       ", Yazar: " + author +
-                                       ", Yıl: " + year);
-                    found = true;
-                }
-        
-                if (!found) {
-                    System.out.println("Müsait kitap bulunamadı.");
-                }
-        
-            } catch (SQLException e) {
-                System.err.println("Sorgulama hatası: " + e.getMessage());
+        String sql = "SELECT * FROM books WHERE isborrowed=0";
+        try(Connection conn = DriverManager.getConnection(URL);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql)){
+
+            while(rs.next()){
+                int id = rs.getInt("id");
+                String bookType = rs.getString("booktype");
+                String bookName = rs.getString("bookname");
+                String bookAuthor = rs.getString("bookauthor");
+                int bookYear = rs.getInt("bookyear");
+                String availability = rs.getString("availability");
+                String borrowerId = rs.getString("borrowerid");
+
+                Object[] row = { id, bookType, bookName, bookAuthor, bookYear, availability, borrowerId };
+                model.addRow(row);
             }
-        
-        
+        }catch(SQLException e){
+            System.err.println("Error while trying to list available books: " + e.getMessage());
+        }
+        return model;
     }
-    
 
-
-         public static void updateBookAvailability(int bookId, boolean isAvailable, Integer borrowerId) {
+    public static void updateBookAvailability(int bookId, boolean isAvailable, Integer borrowerId) {
             String sql = "UPDATE books SET isborrowed = ?, borrowerid = ? WHERE id = ?";
         
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -121,10 +120,4 @@ public class BookDatabase {
                 System.err.println("Kitap güncellenirken hata oluştu: " + e.getMessage());
             }
         }
-
-
-
-
-    
-    
 }

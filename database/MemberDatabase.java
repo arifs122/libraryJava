@@ -33,7 +33,9 @@ public class MemberDatabase {
      }
     }
     
-    public static void insertMember() {}
+    public static void insertMember() {
+
+    }
     public static void listMembers() {}
     public static void updateCanBorrow() {}
 }

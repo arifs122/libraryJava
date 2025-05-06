@@ -6,6 +6,7 @@ import model.Book;
 import util.IconHelper;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -47,14 +48,9 @@ public class GUI {
 
 	private JFrame mainFrame;
 	private JButton btnAddBooks;
-	private JButton btnListBooks;
-	private JButton btnListBorrowedBooks;
-	private JButton btnListAvailableBooks;
 	private JButton btnReturnBook;
 	private JButton btnBorrowBook;
 	private JButton btnAddMember;
-	private JButton btnListMembers;
-
 
     private JPanel mainPanel;
 	private CardLayout  cardLayout;
@@ -67,6 +63,8 @@ public class GUI {
 	private JPanel listMembersPanel;
 	private JPanel returnBookPanel;
 	private JPanel borrowBookPanel;
+	private JPanel borrowBookFormPanel;
+	private JPanel borrowBookListingPanel;
 
 	//mainde cagirabilmek icin gui islemleri start icine yazılcak
 	public void guiStart(){
@@ -88,7 +86,7 @@ public class GUI {
 		//createAddMemberPanel();
 		//createListMembersPanel();
 		//createListAllBooksPanel();
-		//createBorrowBookPanel();
+		createBorrowBookPanel();
 		//createReturnBookPanel();
 		//createListAvailableBooks();
 		//createListBorrowedBooks();
@@ -96,6 +94,7 @@ public class GUI {
 		//oluşturulan kartları mainpanele ekliyoruz geçiş yaparken burdan yapılcak
 		mainPanel.add(homePanel, "HomePanel");
 		mainPanel.add(addBookPanel, "AddBookPanel");
+		mainPanel.add(borrowBookPanel, "BorrowBookPanel");
 
 
 
@@ -104,9 +103,8 @@ public class GUI {
 	}
 
 	private void createHomePanel(){//ana ekran kartı
-		homePanel = new JPanel();
+		homePanel = new JPanel(null);
 		homePanel.setBackground(new Color(222,222,225));
-		homePanel.setLayout(null);
 		WelcomeLabel();
 		addHomeButtons();
 	}
@@ -114,7 +112,7 @@ public class GUI {
 	private void addHomeButtons(){
 		btnAddBooks = new JButton("Add Books");
 		setButtonLook(btnAddBooks);
-		btnAddBooks.setBounds(100, 140, 125, 35);
+		btnAddBooks.setBounds(70, 110, 125, 30);
 		btnAddBooks.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cardLayout.show(mainPanel, "AddBookPanel");
@@ -122,7 +120,7 @@ public class GUI {
 		});
 		btnAddMember = new JButton("Add Member");
 		setButtonLook(btnAddMember);
-		btnAddMember.setBounds(325, 140, 125, 35);
+		btnAddMember.setBounds(70, 190, 125, 30);
 		btnAddMember.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -130,97 +128,72 @@ public class GUI {
 		});
 		btnBorrowBook = new JButton("Borrow Book");
 		setButtonLook(btnBorrowBook);
-		btnBorrowBook.setBounds(550, 140, 125, 35);
+		btnBorrowBook.setBounds(70, 270, 125, 30);
 		btnBorrowBook.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				cardLayout.show(mainPanel, "BorrowBookPanel");
 			}
 		});
 		btnReturnBook = new JButton("Return Book");
 		setButtonLook(btnReturnBook);
-		btnReturnBook.setBounds(775, 140, 125, 35);
+		btnReturnBook.setBounds(70, 350, 125, 30);
 		btnReturnBook.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
 			}
 		});
-		btnListBooks = new JButton("List Books");
-		setButtonLook(btnListBooks);
-		btnListBooks.setBounds(100, 270, 125, 35);
-		btnListBooks.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
 
-			}
-		});
-		btnListMembers = new JButton("List Members");
-		setButtonLook(btnListMembers);
-		btnListMembers.setBounds(325, 270, 125, 35);
-		btnListMembers.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-			}
-		});
-		btnListAvailableBooks = new JButton("List Available");
-		setButtonLook(btnListAvailableBooks);
-		btnListAvailableBooks.setToolTipText("List available books");
-		btnListAvailableBooks.setBounds(550, 270, 125, 35);
-		btnListAvailableBooks.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-			}
-		});
-		btnListBorrowedBooks = new JButton("List Borrowed");
-		setButtonLook(btnListBorrowedBooks);
-		btnListBorrowedBooks.setToolTipText("List Borrowed books");
-		btnListBorrowedBooks.setBounds(775, 270, 125, 35);
-		btnListBorrowedBooks.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-			}
-		});
 		homePanel.add(btnAddMember);
 		homePanel.add(btnAddBooks);
 		homePanel.add(btnBorrowBook);
 		homePanel.add(btnReturnBook);
-		homePanel.add(btnListBooks);
-		homePanel.add(btnListAvailableBooks);
-		homePanel.add(btnListBorrowedBooks);
-		homePanel.add(btnListMembers);
 
 	}
 	//add book butonuna tıklanınca geçilecek olan panel
 	private void createAddBookPanel(){
 		addBookPanel = new JPanel(null);
 		addBookPanel.setBackground(new Color(222,222,225));
+		JLabel addBookMessage = new JLabel("Please enter the information about the book.", SwingConstants.CENTER);
+		addBookMessage.setFont(new Font("Californian FB", Font.BOLD, 20));
+		addBookMessage.setBounds(310,30,385,30);
+		addBookPanel.add(addBookMessage);
 		JLabel bookNameLabel = new JLabel("Book Name");
-		bookNameLabel.setBounds(50, 50, 100, 30);
+		bookNameLabel.setBounds(80, 80, 100, 30);
 		JTextField bookNameTxt = new JTextField();
-		bookNameTxt.setBounds(120, 50, 100, 30);
+		bookNameTxt.setBounds(150, 80, 100, 30);
 		addBookPanel.add(bookNameTxt);
 		addBookPanel.add(bookNameLabel);
 		JLabel bookAuthorLabel = new JLabel("Book Author");
-		bookAuthorLabel.setBounds(50, 100, 100, 30);
+		bookAuthorLabel.setBounds(80, 130, 100, 30);
 		JTextField bookAuthorTxt = new JTextField();
-		bookAuthorTxt.setBounds(120, 100, 100, 30);
+		bookAuthorTxt.setBounds(150, 130, 100, 30);
 		addBookPanel.add(bookAuthorTxt);
 		addBookPanel.add(bookAuthorLabel);
 		JLabel bookYearLabel = new JLabel("Book Year");
-		bookYearLabel.setBounds(50, 150, 100, 30);
+		bookYearLabel.setBounds(80, 180, 100, 30);
 		JTextField bookYearTxt = new JTextField();
-		bookYearTxt.setBounds(120, 150, 100, 30);
+		bookYearTxt.setBounds(150, 180, 100, 30);
 		addBookPanel.add(bookYearTxt);
 		addBookPanel.add(bookYearLabel);
 		JLabel bookTypeLabel = new JLabel("Book Type");
-		bookTypeLabel.setBounds(50, 200, 100, 30);
+		bookTypeLabel.setBounds(80, 230, 100, 30);
 		JComboBox<String> typeComboBox = new JComboBox<>(new String[]{"novel", "encyclopedia", "poetry"});
-		typeComboBox.setBounds(120, 200, 100, 30);
+		typeComboBox.setBounds(150, 230, 100, 30);
 		addBookPanel.add(bookTypeLabel);
 		addBookPanel.add(typeComboBox);
 
+		JButton backButton = new JButton("Back");
+		backButton.setBounds(850,400,100,30);
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				back();
+			}
+		});
+		addBookPanel.add(backButton);
 
 
 		JButton addBookButton = new JButton("Add Book");
-		addBookButton.setBounds(50, 250, 100, 30);
+		addBookButton.setBounds(200, 280, 100, 30);
 		addBookButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String name = bookNameTxt.getText();
@@ -236,12 +209,63 @@ public class GUI {
 
 
 	}
+	private void createBorrowBookPanel(){
+		borrowBookPanel = new JPanel(null);
+		borrowBookPanel.setBackground(new Color(222,222,225));
+		JLabel borrowBookMessage = new JLabel("Please enter the ID of the borrower and the ID of the book to be borrowed.", SwingConstants.CENTER);
+		borrowBookMessage.setFont(new Font("Californian FB", Font.BOLD, 20));
+		borrowBookMessage.setBounds(175, 40, 650, 30);
 
+		borrowBookFormPanel = new JPanel(null);
+		borrowBookFormPanel.setBackground(new Color(222,222,225));
+		borrowBookFormPanel.setBounds(80, 100, 400, 300);
+
+		JLabel bookIdLabel = new JLabel("Book ID");
+		bookIdLabel.setBounds(0, 0, 100, 30);
+		JTextField bookIdTxt = new JTextField();
+		bookIdTxt.setBounds(70, 0, 100, 30);
+		borrowBookFormPanel.add(bookIdLabel);
+		borrowBookFormPanel.add(bookIdTxt);
+		JLabel borrowerIdLabel = new JLabel("Borrower ID");
+		borrowerIdLabel.setBounds(0, 50, 100, 30);
+		JTextField borrowerIdTxt = new JTextField();
+		borrowerIdTxt.setBounds(70, 50, 100, 30);
+		borrowBookFormPanel.add(borrowerIdLabel);
+		borrowBookFormPanel.add(borrowerIdTxt);
+
+		JButton borrowBookButton = new JButton("Borrow Book");
+		borrowBookButton.setBounds(115, 100, 110, 30);
+		borrowBookButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+			}
+		});
+		borrowBookFormPanel.add(borrowBookButton);
+
+		DefaultTableModel model = BookDatabase.listAvailableBooks();
+		JTable bookTable = new JTable(model);
+		JScrollPane scrollPane = new JScrollPane(bookTable);
+		scrollPane.setBounds(350, 100, 600, 250);
+		borrowBookPanel.add(scrollPane);
+
+
+		JButton backButton = new JButton("Back");
+		backButton.setBounds(850,400,100,30);
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				back();
+			}
+		});
+		borrowBookPanel.add(backButton);
+
+		borrowBookPanel.add(borrowBookMessage);
+		borrowBookPanel.add(borrowBookFormPanel);
+	}
 
 	private void WelcomeLabel() {
         JLabel lblWelcome = new JLabel("Welcome to the Library Management System! Select an option to continue.", SwingConstants.CENTER);
 		lblWelcome.setFont(new Font("Californian FB", Font.BOLD, 20));
-		lblWelcome.setBounds(140, 40, 720, 30); // x, y, width, height
+		lblWelcome.setBounds(140, 30, 720, 30); // x, y, width, height
 		mainFrame.add(lblWelcome);
 	}
 
@@ -253,5 +277,9 @@ public class GUI {
 		button.setBackground(new Color(204, 229, 255));
 		button.setForeground(Color.black);
 		button.setFont(new Font("Californian FB", Font.BOLD, 15));
+	}
+	private void back(){
+		cardLayout.show(mainPanel, "HomePanel");
+		WelcomeLabel();
 	}
 }
