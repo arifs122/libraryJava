@@ -184,6 +184,7 @@ public class GUI {
 		addBookPanel.add(typeComboBox);
 
 		JButton backButton = new JButton("Back");
+		setButtonLook(backButton);
 		backButton.setBounds(850,400,100,30);
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -194,6 +195,7 @@ public class GUI {
 
 
 		JButton addBookButton = new JButton("Add Book");
+		setButtonLook(addBookButton);
 		addBookButton.setBounds(200, 280, 100, 30);
 		addBookButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -235,7 +237,8 @@ public class GUI {
 		borrowBookFormPanel.add(borrowerIdTxt);
 
 		JButton borrowBookButton = new JButton("Borrow Book");
-		borrowBookButton.setBounds(115, 100, 110, 30);
+		setButtonLook(borrowBookButton);
+		borrowBookButton.setBounds(110, 100, 120, 30);
 		borrowBookButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -259,6 +262,7 @@ public class GUI {
 
 
 		JButton backButton = new JButton("Back");
+		setButtonLook(backButton);
 		backButton.setBounds(850,400,100,30);
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
