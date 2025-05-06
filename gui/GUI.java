@@ -3,6 +3,7 @@ import database.BookDatabase;
 import factories.BookFactory;
 import interfaces.NotBorrowable;
 import model.Book;
+import util.IconHelper;
 
 import javax.swing.*;
 import java.awt.*;
@@ -72,6 +73,7 @@ public class GUI {
 
 		mainFrame = new JFrame("Library Management System");
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		IconHelper.setAppIcon(mainFrame);
 		mainFrame.setSize(1000, 500);
 		mainFrame.setResizable(false);
 		mainFrame.setLocationRelativeTo(null);
