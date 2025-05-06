@@ -38,17 +38,15 @@ public class BookDatabase {
      }
     }
     
-        public static void insertBook(Book book,int borrowerid) {
-    String sql = "INSERT INTO books (bookname, bookauthor, bookyear, booktype, borrowerid, isborrowed) VALUES (?, ?, ?, ?, ?, ?)";
+        public static void insertBook(Book book) {
+    String sql = "INSERT INTO books (bookname, bookauthor, bookyear, booktype) VALUES (?, ?, ?, ?)";
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
         pstmt.setString(1, book.getBookName());         // 1. ? yerine kitap adı gelir
         pstmt.setString(2, book.getBookAuthor());       // 2. ? yerine yazar adı gelir
         pstmt.setInt(3, book.getBookYear());            // 3. ? yerine yıl gelir
         pstmt.setString(4, book.getBookType());
-        pstmt.setInt(5, borrowerid);
-        pstmt.setInt(6, 0);               // 4. ? yerine varsayılan olarak "ödünç alınabilir" (0)
-
+        // borrower id ve isborrowed book oluştururken default olarak ekleniyor
         pstmt.executeUpdate();            // Komutu çalıştırır
         System.out.println("Kitap başarıyla eklendi.");
     } catch (SQLException e) {
