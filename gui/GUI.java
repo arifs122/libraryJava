@@ -246,6 +246,11 @@ public class GUI {
 		});
 		borrowBookFormPanel.add(borrowBookButton);
 
+		JLabel tableTitleLabel = new JLabel("Borrowable Books", SwingConstants.CENTER);
+		tableTitleLabel.setBounds(592, 80, 115, 30);
+		tableTitleLabel.setFont(new Font("Californian FB", Font.BOLD, 15));
+		borrowBookPanel.add(tableTitleLabel);
+
 		DefaultTableModel model = BookDatabase.listAvailableBooks();
 		JTable bookTable = new JTable(model);
 		//table sutunları artık ayarlanamıyor ve kendimiz büyüklüklerini ayarladık
