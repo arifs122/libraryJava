@@ -73,6 +73,7 @@ public class GUI {
 	private JPanel borrowBookListingPanel;
 
 	private JTextField bookIdTxt;
+	private JTable bookTable;
 
 	//mainde cagirabilmek icin gui islemleri start icine yazılcak
 	public void guiStart(){
@@ -213,6 +214,7 @@ public class GUI {
 				//book nesnesini kitap türüne göre factory design pattern ile oluşturuyoruz
 				Book book = BookFactory.create(type, name, author, year);
 				BookDatabase.insertBook(book);
+				refreshBookTable();
 			}
 		});
 		addBookPanel.add(addBookButton);
@@ -259,7 +261,7 @@ public class GUI {
 		borrowBookPanel.add(tableTitleLabel);
 
 		DefaultTableModel model = BookDatabase.listAvailableBooks();
-		JTable bookTable = new JTable(model);
+		bookTable = new JTable(model);
 
 		bookTable.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
@@ -352,41 +354,6 @@ public class GUI {
 	addMemberPanel.add(backButton);
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	private void WelcomeLabel() {
         JLabel lblWelcome = new JLabel("Welcome to the Library Management System! Select an option to continue.", SwingConstants.CENTER);
 		lblWelcome.setFont(new Font("Californian FB", Font.BOLD, 20));
@@ -407,5 +374,12 @@ public class GUI {
 	private void back(){
 		cardLayout.show(mainPanel, "HomePanel");
 		WelcomeLabel();
+	}
+
+	private void refreshBookTable(){
+		if (bookTable != null){
+			DefaultTableModel model = BookDatabase.listAvailableBooks();
+			bookTable.setModel(model);
+		}
 	}
 }
