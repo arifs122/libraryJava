@@ -73,7 +73,6 @@ public class GUI {
 	private JPanel borrowBookListingPanel;
 
 	private JTextField bookIdTxt;
-	private JTable bookTable;
 
 	//mainde cagirabilmek icin gui islemleri start icine yazılcak
 	public void guiStart(){
@@ -119,7 +118,7 @@ public class GUI {
 	}
 	//ana sayfadaki butonlar buraya
 	private void addHomeButtons(){
-		btnAddBooks = new JButton("Add Books");
+		btnAddBooks = new JButton("Add Book");
 		setButtonLook(btnAddBooks);
 		btnAddBooks.setBounds(70, 110, 125, 30);
 		btnAddBooks.addActionListener(new ActionListener() {
@@ -162,32 +161,32 @@ public class GUI {
 	private void createAddBookPanel(){
 		addBookPanel = new JPanel(null);
 		addBookPanel.setBackground(new Color(222,222,225));
-		JLabel addBookMessage = new JLabel("Please enter the information about the book.", SwingConstants.CENTER);
+		JLabel addBookMessage = new JLabel("Please enter the book information.", SwingConstants.CENTER);
 		addBookMessage.setFont(new Font("Californian FB", Font.BOLD, 20));
-		addBookMessage.setBounds(310,30,385,30);
+		addBookMessage.setBounds(250,30,500,30);
 		addBookPanel.add(addBookMessage);
 		JLabel bookNameLabel = new JLabel("Book Name");
-		bookNameLabel.setBounds(80, 80, 100, 30);
+		bookNameLabel.setBounds(80, 90, 100, 30);
 		JTextField bookNameTxt = new JTextField();
-		bookNameTxt.setBounds(150, 80, 100, 30);
+		bookNameTxt.setBounds(155, 90, 200, 30);
 		addBookPanel.add(bookNameTxt);
 		addBookPanel.add(bookNameLabel);
 		JLabel bookAuthorLabel = new JLabel("Book Author");
-		bookAuthorLabel.setBounds(80, 130, 100, 30);
+		bookAuthorLabel.setBounds(80, 140, 100, 30);
 		JTextField bookAuthorTxt = new JTextField();
-		bookAuthorTxt.setBounds(150, 130, 100, 30);
+		bookAuthorTxt.setBounds(155, 140, 200, 30);
 		addBookPanel.add(bookAuthorTxt);
 		addBookPanel.add(bookAuthorLabel);
 		JLabel bookYearLabel = new JLabel("Book Year");
-		bookYearLabel.setBounds(80, 180, 100, 30);
+		bookYearLabel.setBounds(80, 190, 100, 30);
 		JTextField bookYearTxt = new JTextField();
-		bookYearTxt.setBounds(150, 180, 100, 30);
+		bookYearTxt.setBounds(155, 190, 75, 30);
 		addBookPanel.add(bookYearTxt);
 		addBookPanel.add(bookYearLabel);
 		JLabel bookTypeLabel = new JLabel("Book Type");
-		bookTypeLabel.setBounds(80, 230, 100, 30);
+		bookTypeLabel.setBounds(80, 240, 100, 30);
 		JComboBox<String> typeComboBox = new JComboBox<>(new String[]{"novel", "encyclopedia", "poetry"});
-		typeComboBox.setBounds(150, 230, 100, 30);
+		typeComboBox.setBounds(155, 240, 200, 30);
 		addBookPanel.add(bookTypeLabel);
 		addBookPanel.add(typeComboBox);
 
@@ -204,17 +203,23 @@ public class GUI {
 
 		JButton addBookButton = new JButton("Add Book");
 		setButtonLook(addBookButton);
-		addBookButton.setBounds(200, 280, 100, 30);
+		addBookButton.setBounds(200, 300, 100, 30);
 		addBookButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String name = bookNameTxt.getText();
-				String author = bookAuthorTxt.getText();
-				int year = Integer.parseInt(bookYearTxt.getText());
-				String type = typeComboBox.getSelectedItem().toString();
-				//book nesnesini kitap türüne göre factory design pattern ile oluşturuyoruz
-				Book book = BookFactory.create(type, name, author, year);
-				BookDatabase.insertBook(book);
-				refreshBookTable();
+				try {
+					String name = bookNameTxt.getText();
+					String author = bookAuthorTxt.getText();
+					int year = Integer.parseInt(bookYearTxt.getText());
+					String type = typeComboBox.getSelectedItem().toString();
+					//book nesnesini kitap türüne göre factory design pattern ile oluşturuyoruz
+					Book book = BookFactory.create(type, name, author, year);
+					JOptionPane.showMessageDialog(null, "Book added successfully.");
+					BookDatabase.insertBook(book);
+				}
+				catch(Exception ex) {
+					JOptionPane.showMessageDialog(null, "Unable to add the book. Check the details and try again.");
+				}
+
 			}
 		});
 		addBookPanel.add(addBookButton);
@@ -224,7 +229,7 @@ public class GUI {
 	private void createBorrowBookPanel(){
 		borrowBookPanel = new JPanel(null);
 		borrowBookPanel.setBackground(new Color(222,222,225));
-		JLabel borrowBookMessage = new JLabel("Please enter the ID of the borrower and the ID of the book to be borrowed.", SwingConstants.CENTER);
+		JLabel borrowBookMessage = new JLabel("Please enter the borrower ID and the book ID.", SwingConstants.CENTER);
 		borrowBookMessage.setFont(new Font("Californian FB", Font.BOLD, 20));
 		borrowBookMessage.setBounds(175, 40, 650, 30);
 
@@ -256,12 +261,12 @@ public class GUI {
 		borrowBookFormPanel.add(borrowBookButton);
 
 		JLabel tableTitleLabel = new JLabel("Borrowable Books", SwingConstants.CENTER);
-		tableTitleLabel.setBounds(592, 80, 115, 30);
+		tableTitleLabel.setBounds(350, 80, 150, 30);
 		tableTitleLabel.setFont(new Font("Californian FB", Font.BOLD, 15));
 		borrowBookPanel.add(tableTitleLabel);
 
 		DefaultTableModel model = BookDatabase.listAvailableBooks();
-		bookTable = new JTable(model);
+		JTable bookTable = new JTable(model);
 
 		bookTable.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
@@ -303,40 +308,69 @@ public class GUI {
 	private void createAddMemberPanel(){
 		addMemberPanel = new JPanel(null);
 		addMemberPanel.setBackground(new Color(222,222,225));
-		JLabel addMemberMessage = new JLabel("Please enter the information about the member.", SwingConstants.CENTER);
+		JLabel addMemberMessage = new JLabel("Please enter the member information.", SwingConstants.CENTER);
 		addMemberMessage.setFont(new Font("Californian FB", Font.BOLD, 20));
 		addMemberMessage.setBounds(310,30,400,30);
 		addMemberPanel.add(addMemberMessage);
 		JLabel memberNameLabel = new JLabel("Member Name");
-		memberNameLabel.setBounds(80, 80, 100, 30);
+		memberNameLabel.setBounds(80, 90, 100, 30);
 		JTextField memberNameTxt = new JTextField();
-		memberNameTxt.setBounds(200, 80, 100, 30);
+		memberNameTxt.setBounds(180, 90, 150, 30);
 		addMemberPanel.add(memberNameLabel);
 		addMemberPanel.add(memberNameTxt);
 		JLabel memberAgeLabel = new JLabel("Member Age");
-		memberAgeLabel.setBounds(80, 130, 100, 30);
+		memberAgeLabel.setBounds(80, 140, 100, 30);
 		JTextField memberAgeTxt = new JTextField();
-		memberAgeTxt.setBounds(200, 130, 100, 30);
+		memberAgeTxt.setBounds(180, 140, 75, 30);
 		addMemberPanel.add(memberAgeLabel);
 		addMemberPanel.add(memberAgeTxt);
 		JLabel memberGenderLabel = new JLabel("Member Gender");
-		memberGenderLabel.setBounds(80, 180, 100, 30);
+		memberGenderLabel.setBounds(80, 190, 100, 30);
 		JComboBox<String> genderComboBox = new JComboBox<>(new String[]{"male", "female"});
-		genderComboBox.setBounds(200, 180, 100, 30);
+		genderComboBox.setBounds(180, 190, 75, 30);
 		addMemberPanel.add(memberGenderLabel);
 		addMemberPanel.add(genderComboBox);
 
+		JLabel tableTitleLabel = new JLabel("Existing Members", SwingConstants.CENTER);
+		tableTitleLabel.setBounds(400, 60, 150, 30);
+		tableTitleLabel.setFont(new Font("Californian FB", Font.BOLD, 15));
+		addMemberPanel.add(tableTitleLabel);
+
+		DefaultTableModel model = MemberDatabase.listMembers();
+		JTable memberTable = new JTable(model);
+
+
+		//table sutunları artık ayarlanamıyor ve kendimiz büyüklüklerini ayarladık
+		memberTable.setDefaultEditor(Object.class, null);
+		TableColumnModel columnModel = memberTable.getColumnModel();
+		int[] widths = {30, 100, 40, 75, 30};
+		for (int i = 0; i < widths.length; i++) {
+			columnModel.getColumn(i).setPreferredWidth(widths[i]);
+			columnModel.getColumn(i).setResizable(false);
+		}
+		JScrollPane scrollPane = new JScrollPane(memberTable);
+		scrollPane.setBounds(400, 80, 600, 250);
+		addMemberPanel.add(scrollPane);
+
 		JButton addMemberButton = new JButton("Add Member");
 		setButtonLook(addMemberButton);
-		addMemberButton.setBounds(200, 280, 140, 30);
+		addMemberButton.setBounds(200, 260, 140, 30);
 		addMemberButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String name = memberNameTxt.getText();
-				int age = Integer.parseInt(memberAgeTxt.getText());
-				String gender = genderComboBox.getSelectedItem().toString();
-				Member member = new Member(name, age, gender);
-				//MemberDatabase.insertMember(member);
-				//member database ekleninceye kadar böyle, hata veriyor yoksa.
+				try {
+					String name = memberNameTxt.getText();
+					String age = memberAgeTxt.getText();
+					String gender = genderComboBox.getSelectedItem().toString();
+					Member member = new Member(name, age, gender);
+					MemberDatabase.insertMember(member);
+					JOptionPane.showMessageDialog(null, "Member added successfully.");
+					//member database ekleninceye kadar böyle, hata veriyor yoksa.
+				}
+
+				catch(Exception ex) {
+					JOptionPane.showMessageDialog(null, "Unable to add the member. Check the details and try again.");
+
+				}
 			}
 
 
@@ -354,10 +388,45 @@ public class GUI {
 	addMemberPanel.add(backButton);
 	}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	private void WelcomeLabel() {
         JLabel lblWelcome = new JLabel("Welcome to the Library Management System! Select an option to continue.", SwingConstants.CENTER);
 		lblWelcome.setFont(new Font("Californian FB", Font.BOLD, 20));
-		lblWelcome.setBounds(140, 30, 720, 30); // x, y, width, height
+		lblWelcome.setBounds(50, 30, 900, 30); // x, y, width, height
 		mainFrame.add(lblWelcome);
 	}
 	//buttonların görünümleri için metod
@@ -368,18 +437,11 @@ public class GUI {
 		button.setOpaque(true);
 		button.setBackground(new Color(204, 229, 255));
 		button.setForeground(Color.black);
-		button.setFont(new Font("Californian FB", Font.BOLD, 15));
+		button.setFont(new Font("Californian FB", Font.BOLD, 13));
 	}
 	//ana menünye dönmek için back buttonlarının içinde olacak metod
 	private void back(){
 		cardLayout.show(mainPanel, "HomePanel");
 		WelcomeLabel();
-	}
-
-	private void refreshBookTable(){
-		if (bookTable != null){
-			DefaultTableModel model = BookDatabase.listAvailableBooks();
-			bookTable.setModel(model);
-		}
 	}
 }

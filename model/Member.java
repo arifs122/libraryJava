@@ -2,9 +2,9 @@ package model;
 
 public class Member {
     private String name;
-    private int age;
-    String gender;
-    public Member(String name, int age, String gender) {
+    private String age;
+    private String gender;
+    public Member(String name, String age, String gender) {
         setAge(age);
         setName(name);
         setGender(gender);
@@ -16,10 +16,10 @@ public class Member {
     public void setName(String name) {
         this.name = name;
     }
-    public int getAge() {
+    public String getAge() {
         return age;
     }
-    public void setAge(int age) {
+    public void setAge(String age) {
         this.age = age;
     }
     public String getGender() {
