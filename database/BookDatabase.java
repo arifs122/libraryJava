@@ -7,7 +7,7 @@ import java.sql.*;
 /*addBook listBooks showBookInfo gibi metodlar burada olacak
  * */
 public class BookDatabase {
-	private static final String URL = "jdbc:sqlite:books.db";
+	private static final String URL = "jdbc:sqlite:books1.db";
     private static Connection conn;
     
     public static void connect() {
@@ -26,7 +26,7 @@ public class BookDatabase {
                 + "bookname TEXT NOT NULL,"
                 + "bookauthor TEXT NOT NULL,"
                 + "bookyear INTEGER NOT NULL,"
-                + "availability INTEGER NOT NULL DEFAULT 1 CHECK(availibility IN (0, 1)),"
+                + "availability INTEGER NOT NULL DEFAULT 1 CHECK(availability IN (0, 1)),"
                 + "borrowerid INTEGER DEFAULT NULL)";
      
      try (Statement stmt = conn.createStatement()) {
@@ -81,7 +81,7 @@ public class BookDatabase {
         model.addColumn("Availability");
         model.addColumn("Borrower ID");
 
-        String sql = "SELECT * FROM books WHERE isborrowed=0";
+        String sql = "SELECT * FROM books WHERE availability=1";
         try(Connection conn = DriverManager.getConnection(URL);
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql)){
@@ -105,7 +105,7 @@ public class BookDatabase {
     }
 
     public static void updateBookAvailability(int bookId, boolean isAvailable, Integer borrowerId) {
-            String sql = "UPDATE books SET isborrowed = ?, borrowerid = ? WHERE id = ?";
+            String sql = "UPDATE books SET availability = ?, borrowerid = ? WHERE id = ?";
         
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setInt(1, isAvailable ? 1 : 0); // 1: müsait, 0: ödünçte

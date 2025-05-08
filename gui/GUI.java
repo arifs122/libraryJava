@@ -14,6 +14,8 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /*bir tane ana frame imiz olacak ve her işlem yaptıgımızda
  * o framedeki her şeyi kaldırıp istedigimiz yeni framedekileri
@@ -69,6 +71,8 @@ public class GUI {
 	private JPanel borrowBookPanel;
 	private JPanel borrowBookFormPanel;
 	private JPanel borrowBookListingPanel;
+
+	private JTextField bookIdTxt;
 
 	//mainde cagirabilmek icin gui islemleri start icine yazılcak
 	public void guiStart(){
@@ -256,6 +260,17 @@ public class GUI {
 
 		DefaultTableModel model = BookDatabase.listAvailableBooks();
 		JTable bookTable = new JTable(model);
+
+		bookTable.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				int selectedRow = bookTable.getSelectedRow();
+				if (selectedRow !=-1) {
+					Object id = bookTable.getValueAt(selectedRow, 0);
+					bookIdTxt.setText(id.toString());
+				}
+			}
+		});
+
 		//table sutunları artık ayarlanamıyor ve kendimiz büyüklüklerini ayarladık
 		bookTable.setDefaultEditor(Object.class, null);
 		TableColumnModel columnModel = bookTable.getColumnModel();
@@ -329,7 +344,6 @@ public class GUI {
 	JButton backButton = new JButton("Back");
 	backButton.setBounds(850,400,100,30);
 	setButtonLook(backButton);
-
 	backButton.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			back();
