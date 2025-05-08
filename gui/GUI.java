@@ -1,8 +1,11 @@
 package gui;
 import database.BookDatabase;
+import database.MemberDatabase;
 import factories.BookFactory;
 import interfaces.NotBorrowable;
 import model.Book;
+import factories.MemberFactory;
+import model.Member;
 import util.IconHelper;
 
 import javax.swing.*;
@@ -84,7 +87,7 @@ public class GUI {
 		//metodların içinde paneller(kartlar) oluşturuluyor
 		createHomePanel();
 		createAddBookPanel();
-		//createAddMemberPanel();
+		createAddMemberPanel();
 		//createListMembersPanel();
 		//createListAllBooksPanel();
 		createBorrowBookPanel();
@@ -96,7 +99,7 @@ public class GUI {
 		mainPanel.add(homePanel, "HomePanel");
 		mainPanel.add(addBookPanel, "AddBookPanel");
 		mainPanel.add(borrowBookPanel, "BorrowBookPanel");
-
+		mainPanel.add(addMemberPanel, "AddMemberPanel");
 
 
 		mainFrame.add(mainPanel);
@@ -124,7 +127,7 @@ public class GUI {
 		btnAddMember.setBounds(70, 190, 125, 30);
 		btnAddMember.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				cardLayout.show(mainPanel, "AddMemberPanel");
 			}
 		});
 		btnBorrowBook = new JButton("Borrow Book");
@@ -279,6 +282,96 @@ public class GUI {
 		borrowBookPanel.add(borrowBookMessage);
 		borrowBookPanel.add(borrowBookFormPanel);
 	}
+
+	private void createAddMemberPanel(){
+		addMemberPanel = new JPanel(null);
+		addMemberPanel.setBackground(new Color(222,222,225));
+		JLabel addMemberMessage = new JLabel("Please enter the information about the member.", SwingConstants.CENTER);
+		addMemberMessage.setFont(new Font("Californian FB", Font.BOLD, 20));
+		addMemberMessage.setBounds(310,30,400,30);
+		addMemberPanel.add(addMemberMessage);
+		JLabel memberNameLabel = new JLabel("Member Name");
+		memberNameLabel.setBounds(80, 80, 100, 30);
+		JTextField memberNameTxt = new JTextField();
+		memberNameTxt.setBounds(200, 80, 100, 30);
+		addMemberPanel.add(memberNameLabel);
+		addMemberPanel.add(memberNameTxt);
+		JLabel memberAgeLabel = new JLabel("Member Age");
+		memberAgeLabel.setBounds(80, 130, 100, 30);
+		JTextField memberAgeTxt = new JTextField();
+		memberAgeTxt.setBounds(200, 130, 100, 30);
+		addMemberPanel.add(memberAgeLabel);
+		addMemberPanel.add(memberAgeTxt);
+		JLabel memberGenderLabel = new JLabel("Member Gender");
+		memberGenderLabel.setBounds(80, 180, 100, 30);
+		JComboBox<String> genderComboBox = new JComboBox<>(new String[]{"male", "female"});
+		genderComboBox.setBounds(200, 180, 100, 30);
+		addMemberPanel.add(memberGenderLabel);
+		addMemberPanel.add(genderComboBox);
+
+		JButton addMemberButton = new JButton("Add Member");
+		setButtonLook(addMemberButton);
+		addMemberButton.setBounds(200, 280, 140, 30);
+		addMemberButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String name = memberNameTxt.getText();
+				int age = Integer.parseInt(memberAgeTxt.getText());
+				String gender = genderComboBox.getSelectedItem().toString();
+				Member member = new Member(name, age, gender);
+				//MemberDatabase.insertMember(member);
+				//member database ekleninceye kadar böyle, hata veriyor yoksa.
+			}
+
+
+		});
+		addMemberPanel.add(addMemberButton);
+
+	JButton backButton = new JButton("Back");
+	backButton.setBounds(850,400,100,30);
+	setButtonLook(backButton);
+
+	backButton.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			back();
+		}
+	});
+	addMemberPanel.add(backButton);
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	private void WelcomeLabel() {
         JLabel lblWelcome = new JLabel("Welcome to the Library Management System! Select an option to continue.", SwingConstants.CENTER);
