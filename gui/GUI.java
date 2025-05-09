@@ -264,7 +264,26 @@ public class GUI {
 		borrowBookButton.setBounds(110, 100, 120, 30);
 		borrowBookButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				try{
+					//odunc alan kisinin canborrow 0sa tekrar alamaması lazım ama member classına canborrow eklenmesi lazım
+					//ansiklopedi kontrolu yaparkenki gibi member dbden çekilip olusturulcak member.canborrow == 0 sa kitabı alamaz olcak
+					//suan 0 olmasına ragmen kitap alabiliyo tekrardan
+					int id = Integer.parseInt(borrowerIdTxt.getText());
+					int bookId = Integer.parseInt(bookIdTxt.getText());
+					Book book = BookDatabase.getBookById(bookId);
+					if (book instanceof NotBorrowable) {
+						JOptionPane.showMessageDialog(null, "You cant borrow a encyclopedia.","Borrow Error", JOptionPane.WARNING_MESSAGE);
+						return;
+					}
+					BookDatabase.updateBookAvailability(bookId,false,id);
+					MemberDatabase.updateMemberCanBorrow(id,false);
+					refreshBookTable();
+					refreshMemberTable();
+					JOptionPane.showMessageDialog(null, "Book has been borrowed successfully.");
+				}catch(Exception ex){
+					JOptionPane.showMessageDialog(null, "Unable to borrow the book, check the details and try again.");
+					ex.printStackTrace();
+				}
 			}
 		});
 		borrowBookFormPanel.add(borrowBookButton);
@@ -374,7 +393,7 @@ public class GUI {
 					MemberDatabase.insertMember(member);
 					refreshMemberTable();
 					JOptionPane.showMessageDialog(null, "Member added successfully.");
-					//member database ekleninceye kadar böyle, hata veriyor yoksa.
+
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(null, "Unable to add the member. Check the details and try again.");
 					ex.printStackTrace();

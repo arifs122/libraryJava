@@ -1,5 +1,7 @@
 package database;
 
+import factories.BookFactory;
+import factories.MemberFactory;
 import model.Member;
 
 import javax.swing.table.DefaultTableModel;
@@ -89,7 +91,24 @@ public class MemberDatabase {
         return model;
     }
 
-    public static void updateCanBorrow() {
+    public static void updateMemberCanBorrow(int memberId, boolean canBorrow) {
+        String sql = "UPDATE members SET canborrow = ? WHERE id = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, canBorrow ? 1 : 0);  // true -> 1 (ödünç alabilir), false -> 0 (alamaz)
+            pstmt.setInt(2, memberId);           // Hangi üye güncelleniyor?
+
+            int affected = pstmt.executeUpdate();
+            if (affected > 0) {
+                System.out.println("Üyenin ödünç alma durumu güncellendi.");
+            } else {
+                System.out.println("Belirtilen ID'ye sahip üye bulunamadı.");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Üye bilgisi güncellenirken hata oluştu: " + e.getMessage());
+        }
     }
+
 
 }

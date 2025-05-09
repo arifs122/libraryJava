@@ -1,5 +1,6 @@
 package database;
 
+import factories.BookFactory;
 import model.Book;
 
 import javax.swing.table.DefaultTableModel;
@@ -57,11 +58,6 @@ public class BookDatabase {
 
 }
 
-         
-
-
-
-    
     public static void listAllBooks() {}
     public static void listLentOutBooks() {}
     /*listeleme metodları oluşturulurken önce DefaultTableModel
@@ -127,4 +123,28 @@ public class BookDatabase {
                 System.err.println("Kitap güncellenirken hata oluştu: " + e.getMessage());
             }
         }
+
+    public static Book getBookById(int bookId) {
+        String sql = "SELECT * FROM books WHERE id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, bookId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                String type = rs.getString("booktype");
+                String name = rs.getString("bookname");
+                String author = rs.getString("bookauthor");
+                int year = rs.getInt("bookyear");
+
+                // BookFactory'den uygun kitap nesnesini al
+                return BookFactory.create(type,name,author,year);
+            } else {
+                return null;
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Kitap alınamadı: " + e.getMessage());
+            return null;
+        }
+    }
 }
