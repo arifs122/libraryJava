@@ -4,7 +4,7 @@ import model.*;
 
 public class MemberFactory {
 
-    public static Member create(String name, String age, String gender){
+    public static Member create(String name, int age, String gender){
 
         switch (gender.toLowerCase()) {
 

@@ -23,7 +23,7 @@ public class MemberDatabase {
         String sql = "CREATE TABLE IF NOT EXISTS members ("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + "membername TEXT NOT NULL,"
-                + "memberage TEXT NOT NULL,"
+                + "memberage INTEGER NOT NULL,"
                 + "membergender TEXT NOT NULL,"
                 + "canborrow INTEGER NOT NULL DEFAULT 1 CHECK(canborrow IN (0, 1)))";
 
@@ -42,7 +42,7 @@ public class MemberDatabase {
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, member.getName());
-            pstmt.setString(2, member.getAge());
+            pstmt.setInt(2, member.getAge());
             pstmt.setString(3, member.getGender());
 
 
@@ -76,7 +76,7 @@ public class MemberDatabase {
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String memberName = rs.getString("membername");
-                String memberAge = rs.getString("memberage");
+                int memberAge = rs.getInt("memberage");
                 String memberGender = rs.getString("membergender");
                 String canBorrow = rs.getString("canborrow");
 

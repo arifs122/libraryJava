@@ -225,6 +225,7 @@ public class GUI {
 
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(null, "Unable to add the book. Check the details and try again.");
+					ex.printStackTrace();
 				}
 
 			}
@@ -367,7 +368,7 @@ public class GUI {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					String name = memberNameTxt.getText();
-					String age = memberAgeTxt.getText();
+					int age = Integer.parseInt(memberAgeTxt.getText());
 					String gender = genderComboBox.getSelectedItem().toString();
 					Member member = new Member(name, age, gender);
 					MemberDatabase.insertMember(member);
@@ -376,6 +377,7 @@ public class GUI {
 					//member database ekleninceye kadar böyle, hata veriyor yoksa.
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(null, "Unable to add the member. Check the details and try again.");
+					ex.printStackTrace();
 
 				}
 			}
