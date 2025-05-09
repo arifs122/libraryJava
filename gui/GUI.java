@@ -1,4 +1,5 @@
 package gui;
+
 import database.BookDatabase;
 import database.MemberDatabase;
 import factories.BookFactory;
@@ -24,14 +25,14 @@ import java.awt.event.MouseEvent;
  * butonların ve framelerin olabildigince metodlarin
  * icinde olması kodun temizligini arttirir.
  * ornegin public void btnKitapListele(){} metodu yapilip
- * guiStart içinde gereken yerde calistirilirsa hem kodu 
+ * guiStart içinde gereken yerde calistirilirsa hem kodu
  * birlestirmek kolay olacak daha sonrasında da kodun oku
  * nabilirligi artmis olacak
- * */ 
+ * */
 /*borrow book ve return book sadece gui da butonlar olarak var olacak
- * işlemleri updateBook ve updateMember üstünden yönetcez 
+ * işlemleri updateBook ve updateMember üstünden yönetcez
  * ansiklopedi alınmaya çalışıldığında ya da mevcut olan bir kitap ödünç
- * alınmaya çalışırsa hata mesajı verilip işlem yapılmayacak o yüzden if 
+ * alınmaya çalışırsa hata mesajı verilip işlem yapılmayacak o yüzden if
  * blokları kullanılmalı */
 
 /*ana menu framei
@@ -58,8 +59,8 @@ public class GUI {
 	private JButton btnBorrowBook;
 	private JButton btnAddMember;
 
-    private JPanel mainPanel;
-	private CardLayout  cardLayout;
+	private JPanel mainPanel;
+	private CardLayout cardLayout;
 	private JPanel homePanel;
 	private JPanel addBookPanel;
 	private JPanel listAllBooksPanel;
@@ -72,10 +73,13 @@ public class GUI {
 	private JPanel borrowBookFormPanel;
 	private JPanel borrowBookListingPanel;
 
+	private JTable bookTable;
+	private JTable memberTable;
 	private JTextField bookIdTxt;
 
+
 	//mainde cagirabilmek icin gui islemleri start icine yazılcak
-	public void guiStart(){
+	public void guiStart() {
 
 		mainFrame = new JFrame("Library Management System");
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -110,14 +114,15 @@ public class GUI {
 		mainFrame.setVisible(true);
 	}
 
-	private void createHomePanel(){//ana ekran kartı
+	private void createHomePanel() {//ana ekran kartı
 		homePanel = new JPanel(null);
-		homePanel.setBackground(new Color(222,222,225));
+		homePanel.setBackground(new Color(222, 222, 225));
 		WelcomeLabel();
 		addHomeButtons();
 	}
+
 	//ana sayfadaki butonlar buraya
-	private void addHomeButtons(){
+	private void addHomeButtons() {
 		btnAddBooks = new JButton("Add Book");
 		setButtonLook(btnAddBooks);
 		btnAddBooks.setBounds(70, 110, 125, 30);
@@ -157,13 +162,14 @@ public class GUI {
 		homePanel.add(btnReturnBook);
 
 	}
+
 	//add book butonuna tıklanınca geçilecek olan panel
-	private void createAddBookPanel(){
+	private void createAddBookPanel() {
 		addBookPanel = new JPanel(null);
-		addBookPanel.setBackground(new Color(222,222,225));
+		addBookPanel.setBackground(new Color(222, 222, 225));
 		JLabel addBookMessage = new JLabel("Please enter the book information.", SwingConstants.CENTER);
 		addBookMessage.setFont(new Font("Californian FB", Font.BOLD, 20));
-		addBookMessage.setBounds(250,30,500,30);
+		addBookMessage.setBounds(250, 30, 500, 30);
 		addBookPanel.add(addBookMessage);
 		JLabel bookNameLabel = new JLabel("Book Name");
 		bookNameLabel.setBounds(80, 90, 100, 30);
@@ -192,7 +198,7 @@ public class GUI {
 
 		JButton backButton = new JButton("Back");
 		setButtonLook(backButton);
-		backButton.setBounds(850,400,100,30);
+		backButton.setBounds(850, 400, 100, 30);
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				back();
@@ -215,8 +221,9 @@ public class GUI {
 					Book book = BookFactory.create(type, name, author, year);
 					JOptionPane.showMessageDialog(null, "Book added successfully.");
 					BookDatabase.insertBook(book);
-				}
-				catch(Exception ex) {
+					refreshBookTable();
+
+				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(null, "Unable to add the book. Check the details and try again.");
 				}
 
@@ -226,15 +233,16 @@ public class GUI {
 
 
 	}
-	private void createBorrowBookPanel(){
+
+	private void createBorrowBookPanel() {
 		borrowBookPanel = new JPanel(null);
-		borrowBookPanel.setBackground(new Color(222,222,225));
+		borrowBookPanel.setBackground(new Color(222, 222, 225));
 		JLabel borrowBookMessage = new JLabel("Please enter the borrower ID and the book ID.", SwingConstants.CENTER);
 		borrowBookMessage.setFont(new Font("Californian FB", Font.BOLD, 20));
 		borrowBookMessage.setBounds(175, 40, 650, 30);
 
 		borrowBookFormPanel = new JPanel(null);
-		borrowBookFormPanel.setBackground(new Color(222,222,225));
+		borrowBookFormPanel.setBackground(new Color(222, 222, 225));
 		borrowBookFormPanel.setBounds(80, 100, 400, 300);
 
 		JLabel bookIdLabel = new JLabel("Book ID");
@@ -266,12 +274,12 @@ public class GUI {
 		borrowBookPanel.add(tableTitleLabel);
 
 		DefaultTableModel model = BookDatabase.listAvailableBooks();
-		JTable bookTable = new JTable(model);
+		bookTable = new JTable(model);
 
 		bookTable.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				int selectedRow = bookTable.getSelectedRow();
-				if (selectedRow !=-1) {
+				if (selectedRow != -1) {
 					Object id = bookTable.getValueAt(selectedRow, 0);
 					bookIdTxt.setText(id.toString());
 				}
@@ -293,7 +301,7 @@ public class GUI {
 
 		JButton backButton = new JButton("Back");
 		setButtonLook(backButton);
-		backButton.setBounds(850,400,100,30);
+		backButton.setBounds(850, 400, 100, 30);
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				back();
@@ -305,12 +313,12 @@ public class GUI {
 		borrowBookPanel.add(borrowBookFormPanel);
 	}
 
-	private void createAddMemberPanel(){
+	private void createAddMemberPanel() {
 		addMemberPanel = new JPanel(null);
-		addMemberPanel.setBackground(new Color(222,222,225));
+		addMemberPanel.setBackground(new Color(222, 222, 225));
 		JLabel addMemberMessage = new JLabel("Please enter the member information.", SwingConstants.CENTER);
 		addMemberMessage.setFont(new Font("Californian FB", Font.BOLD, 20));
-		addMemberMessage.setBounds(310,30,400,30);
+		addMemberMessage.setBounds(310, 30, 400, 30);
 		addMemberPanel.add(addMemberMessage);
 		JLabel memberNameLabel = new JLabel("Member Name");
 		memberNameLabel.setBounds(80, 90, 100, 30);
@@ -337,7 +345,7 @@ public class GUI {
 		addMemberPanel.add(tableTitleLabel);
 
 		DefaultTableModel model = MemberDatabase.listMembers();
-		JTable memberTable = new JTable(model);
+		memberTable = new JTable(model);
 
 
 		//table sutunları artık ayarlanamıyor ve kendimiz büyüklüklerini ayarladık
@@ -363,11 +371,10 @@ public class GUI {
 					String gender = genderComboBox.getSelectedItem().toString();
 					Member member = new Member(name, age, gender);
 					MemberDatabase.insertMember(member);
+					refreshMemberTable();
 					JOptionPane.showMessageDialog(null, "Member added successfully.");
 					//member database ekleninceye kadar böyle, hata veriyor yoksa.
-				}
-
-				catch(Exception ex) {
+				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(null, "Unable to add the member. Check the details and try again.");
 
 				}
@@ -377,58 +384,24 @@ public class GUI {
 		});
 		addMemberPanel.add(addMemberButton);
 
-	JButton backButton = new JButton("Back");
-	backButton.setBounds(850,400,100,30);
-	setButtonLook(backButton);
-	backButton.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-			back();
-		}
-	});
-	addMemberPanel.add(backButton);
+		JButton backButton = new JButton("Back");
+		backButton.setBounds(850, 400, 100, 30);
+		setButtonLook(backButton);
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				back();
+			}
+		});
+		addMemberPanel.add(backButton);
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	private void WelcomeLabel() {
-        JLabel lblWelcome = new JLabel("Welcome to the Library Management System! Select an option to continue.", SwingConstants.CENTER);
+		JLabel lblWelcome = new JLabel("Welcome to the Library Management System! Select an option to continue.", SwingConstants.CENTER);
 		lblWelcome.setFont(new Font("Californian FB", Font.BOLD, 20));
 		lblWelcome.setBounds(50, 30, 900, 30); // x, y, width, height
 		mainFrame.add(lblWelcome);
 	}
+
 	//buttonların görünümleri için metod
 	private void setButtonLook(JButton button) {
 		button.setFocusPainted(false);
@@ -439,9 +412,24 @@ public class GUI {
 		button.setForeground(Color.black);
 		button.setFont(new Font("Californian FB", Font.BOLD, 13));
 	}
+
 	//ana menünye dönmek için back buttonlarının içinde olacak metod
-	private void back(){
+	private void back() {
 		cardLayout.show(mainPanel, "HomePanel");
 		WelcomeLabel();
+	}
+
+	private void refreshBookTable() {
+		if (bookTable != null) {
+			DefaultTableModel model = BookDatabase.listAvailableBooks();
+			bookTable.setModel(model);
+		}
+	}
+
+	private void refreshMemberTable() {
+		if (memberTable != null) {
+			DefaultTableModel model = MemberDatabase.listMembers();
+			memberTable.setModel(model);
+		}
 	}
 }
