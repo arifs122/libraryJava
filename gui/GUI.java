@@ -12,11 +12,16 @@ import util.IconHelper;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+
 
 /*bir tane ana frame imiz olacak ve her işlem yaptıgımızda
  * o framedeki her şeyi kaldırıp istedigimiz yeni framedekileri
@@ -98,12 +103,8 @@ public class GUI {
 		createHomePanel();
 		createAddBookPanel();
 		createAddMemberPanel();
-		//createListMembersPanel();
-		//createListAllBooksPanel();
 		createBorrowBookPanel();
 		createReturnBookPanel();
-		//createListAvailableBooks();
-		//createListBorrowedBooks();
 
 		//oluşturulan kartları mainpanele ekliyoruz geçiş yaparken burdan yapılcakbo
 		mainPanel.add(homePanel, "HomePanel");
@@ -176,18 +177,21 @@ public class GUI {
 		bookNameLabel.setBounds(80, 90, 100, 30);
 		JTextField bookNameTxt = new JTextField();
 		bookNameTxt.setBounds(155, 90, 150, 30);
+		setCharacterRules(bookNameTxt);
 		addBookPanel.add(bookNameTxt);
 		addBookPanel.add(bookNameLabel);
 		JLabel bookAuthorLabel = new JLabel("Book Author");
 		bookAuthorLabel.setBounds(80, 140, 100, 30);
 		JTextField bookAuthorTxt = new JTextField();
 		bookAuthorTxt.setBounds(155, 140, 150, 30);
+		setCharacterRules(bookAuthorTxt);
 		addBookPanel.add(bookAuthorTxt);
 		addBookPanel.add(bookAuthorLabel);
 		JLabel bookYearLabel = new JLabel("Book Year");
 		bookYearLabel.setBounds(80, 190, 100, 30);
 		JTextField bookYearTxt = new JTextField();
 		bookYearTxt.setBounds(155, 190, 75, 30);
+		setNumberRules(bookYearTxt);
 		addBookPanel.add(bookYearTxt);
 		addBookPanel.add(bookYearLabel);
 		JLabel bookTypeLabel = new JLabel("Book Type");
@@ -276,12 +280,14 @@ public class GUI {
 		bookIdLabel.setBounds(0, 0, 100, 30);
 		JTextField bookIdTxt = new JTextField();
 		bookIdTxt.setBounds(70, 0, 100, 30);
+		setNumberRules(bookIdTxt);
 		borrowBookFormPanel.add(bookIdLabel);
 		borrowBookFormPanel.add(bookIdTxt);
 		JLabel borrowerIdLabel = new JLabel("Borrower ID");
 		borrowerIdLabel.setBounds(0, 50, 100, 30);
 		JTextField borrowerIdTxt = new JTextField();
 		borrowerIdTxt.setBounds(70, 50, 100, 30);
+		setNumberRules(borrowerIdTxt);
 		borrowBookFormPanel.add(borrowerIdLabel);
 		borrowBookFormPanel.add(borrowerIdTxt);
 
@@ -304,7 +310,7 @@ public class GUI {
 						JOptionPane.showMessageDialog(null, "You can't borrow an encyclopedia.","Borrow Error", JOptionPane.WARNING_MESSAGE);
 						return;
 					}
-					if (!(member.getCanBorrow())){
+                    if (!(member.getCanBorrow())){
 						JOptionPane.showMessageDialog(null, "The member with that ID can't borrow a book.","Borrow Error", JOptionPane.WARNING_MESSAGE);
 						return;
 					}
@@ -382,12 +388,14 @@ public class GUI {
 		memberNameLabel.setBounds(80, 90, 100, 30);
 		JTextField memberNameTxt = new JTextField();
 		memberNameTxt.setBounds(180, 90, 150, 30);
+		setCharacterRules(memberNameTxt);
 		addMemberPanel.add(memberNameLabel);
 		addMemberPanel.add(memberNameTxt);
 		JLabel memberAgeLabel = new JLabel("Member Age");
 		memberAgeLabel.setBounds(80, 140, 100, 30);
 		JTextField memberAgeTxt = new JTextField();
 		memberAgeTxt.setBounds(180, 140, 75, 30);
+		setNumberRules(memberAgeTxt);
 		addMemberPanel.add(memberAgeLabel);
 		addMemberPanel.add(memberAgeTxt);
 		JLabel memberGenderLabel = new JLabel("Member Gender");
@@ -472,6 +480,7 @@ public class GUI {
 		bookIdLabel.setBounds(0, 0, 100, 30);
 		JTextField bookIdTxt = new JTextField();
 		bookIdTxt.setBounds(70, 0, 100, 30);
+		setNumberRules(bookIdTxt);
 		returnBookFormPanel.add(bookIdLabel);
 		returnBookFormPanel.add(bookIdTxt);
 
@@ -598,5 +607,29 @@ public class GUI {
 			DefaultTableModel model = MemberDatabase.listMembers();
 			memberTable.setModel(model);
 		}
+	}
+
+	public void setNumberRules(JTextField numberRules) {
+		numberRules.setDocument(new PlainDocument() {
+			@Override
+			public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+				if (str == null) return;
+				if (str.matches("\\d+")) { // sadece rakamlar izinli
+					super.insertString(offs, str, a);
+				}
+			}
+		});
+	}
+
+	public void setCharacterRules(JTextField characterRules) {
+		characterRules.setDocument(new PlainDocument() {
+			@Override
+			public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+				if (str == null) return;
+				if (str.matches("[a-zA-Z\\s]+")) {
+					super.insertString(offs, str, a);
+				}
+			}
+		});
 	}
 }
