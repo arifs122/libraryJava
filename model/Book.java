@@ -6,13 +6,15 @@ public abstract class Book {
     private String bookAuthor;
     private int bookYear;
     private boolean isBorrowed;
+    private Integer borrowerId;
 
-    Book(String bookType, String bookName, String bookAuthor, int bookYear, boolean isBorrowed) {
+    Book(String bookType, String bookName, String bookAuthor, int bookYear, boolean isBorrowed, Integer borrowerId) {
         setBookType(bookType);
         setBookName(bookName);
         setBookAuthor(bookAuthor);
         setBookYear(bookYear);
         setBorrowed(isBorrowed);
+        setBorrowerId(borrowerId);
     }
 
     public String getBookType() {
@@ -45,4 +47,6 @@ public abstract class Book {
     public void setBorrowed(boolean borrowed) {
         isBorrowed = borrowed;
     }
+    public Integer getBorrowerId() { return borrowerId; }
+    public void setBorrowerId(Integer borrowerId) { this.borrowerId = borrowerId; }
 }

@@ -4,10 +4,13 @@ public class Member {
     private String name;
     private int age;
     private String gender;
-    public Member(String name, int age, String gender) {
+    private boolean canBorrow;
+
+    public Member(String name, int age, String gender, boolean canBorrow) {
         setAge(age);
         setName(name);
         setGender(gender);
+        setCanBorrow(canBorrow);
     }
 
     public String getName() {
@@ -28,4 +31,8 @@ public class Member {
     public void setGender(String gender) {
         this.gender = gender;
     }
+    public boolean getCanBorrow() {
+        return canBorrow;
+    }
+    public void setCanBorrow(boolean canBorrow) { this.canBorrow = canBorrow; }
 }
