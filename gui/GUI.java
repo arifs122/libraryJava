@@ -201,6 +201,9 @@ public class GUI {
 		addBookPanel.add(bookTypeLabel);
 		addBookPanel.add(typeComboBox);
 
+		bookNameTxt.addActionListener(e -> bookAuthorTxt.requestFocusInWindow());
+		bookAuthorTxt.addActionListener(e -> bookYearTxt.requestFocusInWindow());
+
 		JButton backButton = new JButton("Back");
 		setButtonLook(backButton);
 		backButton.setBounds(850, 400, 100, 30);
@@ -243,7 +246,7 @@ public class GUI {
 		addBookPanel.add(addBookButton);
 
 		JLabel tableTitleLabel = new JLabel("All Books", SwingConstants.CENTER);
-		tableTitleLabel.setBounds(300, 80, 200, 30);
+		tableTitleLabel.setBounds(550, 80, 200, 30);
 		tableTitleLabel.setFont(new Font("Californian FB", Font.BOLD, 15));
 		addBookPanel.add(tableTitleLabel);
 
@@ -253,7 +256,7 @@ public class GUI {
 		//table sutunları artık ayarlanamıyor ve kendimiz büyüklüklerini ayarladık
 		allBooksTable.setDefaultEditor(Object.class, null);
 		TableColumnModel columnModel = allBooksTable.getColumnModel();
-		int[] widths = {30, 90, 150, 120, 70, 60, 80};
+		int[] widths = {30, 80, 150, 120, 70, 70, 80};
 		for (int i = 0; i < widths.length; i++) {
 			columnModel.getColumn(i).setPreferredWidth(widths[i]);
 			columnModel.getColumn(i).setResizable(false);
@@ -291,6 +294,8 @@ public class GUI {
 		borrowBookFormPanel.add(borrowerIdLabel);
 		borrowBookFormPanel.add(borrowerIdTxt);
 
+		bookIdTxt.addActionListener(e -> borrowerIdTxt.requestFocusInWindow());
+
 		JButton borrowBookButton = new JButton("Borrow Book");
 		setButtonLook(borrowBookButton);
 		borrowBookButton.setBounds(110, 100, 120, 30);
@@ -303,10 +308,6 @@ public class GUI {
 					Book book = BookDatabase.getBookById(bookId);
 					Member member = MemberDatabase.getMemberById(id);
 					if (book instanceof NotBorrowable) {
-						JOptionPane.showMessageDialog(null, "You can't borrow an encyclopedia.","Borrow Error", JOptionPane.WARNING_MESSAGE);
-						return;
-					}
-					if (member instanceof NotBorrowable) {
 						JOptionPane.showMessageDialog(null, "You can't borrow an encyclopedia.","Borrow Error", JOptionPane.WARNING_MESSAGE);
 						return;
 					}
@@ -333,7 +334,7 @@ public class GUI {
 		borrowBookFormPanel.add(borrowBookButton);
 
 		JLabel tableTitleLabel = new JLabel("Borrowable Books", SwingConstants.CENTER);
-		tableTitleLabel.setBounds(330, 80, 200, 30);
+		tableTitleLabel.setBounds(560, 80, 200, 30);
 		tableTitleLabel.setFont(new Font("Californian FB", Font.BOLD, 15));
 		borrowBookPanel.add(tableTitleLabel);
 
@@ -406,8 +407,10 @@ public class GUI {
 		addMemberPanel.add(genderComboBox);
 		genderComboBox.setSelectedItem(null);
 
+		memberNameTxt.addActionListener(e -> memberAgeTxt.requestFocusInWindow());
+
 		JLabel tableTitleLabel = new JLabel("Existing Members", SwingConstants.CENTER);
-		tableTitleLabel.setBounds(330, 80, 200, 30);
+		tableTitleLabel.setBounds(610, 80, 200, 30);
 		tableTitleLabel.setFont(new Font("Californian FB", Font.BOLD, 15));
 		addMemberPanel.add(tableTitleLabel);
 
@@ -418,13 +421,13 @@ public class GUI {
 		//table sutunları artık ayarlanamıyor ve kendimiz büyüklüklerini ayarladık
 		memberTable.setDefaultEditor(Object.class, null);
 		TableColumnModel columnModel = memberTable.getColumnModel();
-		int[] widths = {30, 100, 40, 75, 30};
+		int[] widths = {20, 150, 60, 80, 60};
 		for (int i = 0; i < widths.length; i++) {
 			columnModel.getColumn(i).setPreferredWidth(widths[i]);
 			columnModel.getColumn(i).setResizable(false);
 		}
 		JScrollPane scrollPane = new JScrollPane(memberTable);
-		scrollPane.setBounds(350, 100, 600, 250);
+		scrollPane.setBounds(450, 100, 500, 250);
 		addMemberPanel.add(scrollPane);
 
 		JButton addMemberButton = new JButton("Add Member");
@@ -514,7 +517,7 @@ public class GUI {
 		returnBookFormPanel.add(returnBookButton);
 
 		JLabel tableTitleLabel = new JLabel("Already Borrowed Books", SwingConstants.CENTER);
-		tableTitleLabel.setBounds(350, 80, 200, 30);
+		tableTitleLabel.setBounds(550, 80, 200, 30);
 		tableTitleLabel.setFont(new Font("Californian FB", Font.BOLD, 15));
 		returnBookPanel.add(tableTitleLabel);
 

@@ -7,4 +7,9 @@ public class Encyclopedia extends Book implements NotBorrowable {
     public Encyclopedia(String bookType, String bookName, String bookAuthor, int bookYear, boolean isBorrowed, Integer borrowerId) {
         super(bookType, bookName, bookAuthor, bookYear, isBorrowed, borrowerId);
     }
+
+    @Override
+    public void cantBorrow() {
+        System.out.println("You can't borrow an Encyclopedia");
+    }
 }
