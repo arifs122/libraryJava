@@ -95,9 +95,7 @@ public class BookDatabase {
         }
         return model;
     }
-    public static void listLentOutBooks() {}
-    /*listeleme metodları oluşturulurken önce DefaultTableModel
-    * oluşturulup guida bu panele dönüştürülecek */
+
     public static DefaultTableModel listAvailableBooks() {
         DefaultTableModel model = new DefaultTableModel() {
             @Override

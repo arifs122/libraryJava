@@ -1,8 +1,6 @@
 package database;
 
-import factories.BookFactory;
 import factories.MemberFactory;
-import model.Book;
 import model.Member;
 
 import javax.swing.table.DefaultTableModel;

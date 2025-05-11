@@ -5,7 +5,6 @@ import database.MemberDatabase;
 import factories.BookFactory;
 import interfaces.NotBorrowable;
 import model.Book;
-import factories.MemberFactory;
 import model.Member;
 import util.IconHelper;
 
@@ -60,30 +59,18 @@ import java.util.Objects;
 public class GUI {
 
 	private JFrame mainFrame;
-	private JButton btnAddBooks;
-	private JButton btnReturnBook;
-	private JButton btnBorrowBook;
-	private JButton btnAddMember;
 
-	private JPanel mainPanel;
+    private JPanel mainPanel;
 	private CardLayout cardLayout;
 	private JPanel homePanel;
 	private JPanel addBookPanel;
-	private JPanel listAllBooksPanel;
-	private JPanel listBorrowedBooksPanel;
-	private JPanel listAvailableBooksPanel;
 	private JPanel addMemberPanel;
-	private JPanel listMembersPanel;
 	private JPanel returnBookPanel;
 	private JPanel borrowBookPanel;
-	private JPanel returnBookFormPanel;
-	private JPanel borrowBookFormPanel;
-	private JPanel borrowBookListingPanel;
 	private JTable allBooksTable;
 	private JTable availableBookTable;
 	private JTable borrowedBookTable;
 	private JTable memberTable;
-	private JTextField bookIdTxt;
 
 
 	//mainde cagirabilmek icin gui islemleri start icine yazılcak
@@ -128,7 +115,7 @@ public class GUI {
 
 	//ana sayfadaki butonlar buraya
 	private void addHomeButtons() {
-		btnAddBooks = new JButton("Add Book");
+        JButton btnAddBooks = new JButton("Add Book");
 		setButtonLook(btnAddBooks);
 		btnAddBooks.setBounds(70, 110, 125, 30);
 		btnAddBooks.addActionListener(new ActionListener() {
@@ -136,7 +123,7 @@ public class GUI {
 				cardLayout.show(mainPanel, "AddBookPanel");
 			}
 		});
-		btnAddMember = new JButton("Add Member");
+        JButton btnAddMember = new JButton("Add Member");
 		setButtonLook(btnAddMember);
 		btnAddMember.setBounds(70, 190, 125, 30);
 		btnAddMember.addActionListener(new ActionListener() {
@@ -144,7 +131,7 @@ public class GUI {
 				cardLayout.show(mainPanel, "AddMemberPanel");
 			}
 		});
-		btnBorrowBook = new JButton("Borrow Book");
+        JButton btnBorrowBook = new JButton("Borrow Book");
 		setButtonLook(btnBorrowBook);
 		btnBorrowBook.setBounds(70, 270, 125, 30);
 		btnBorrowBook.addActionListener(new ActionListener() {
@@ -152,7 +139,7 @@ public class GUI {
 				cardLayout.show(mainPanel, "BorrowBookPanel");
 			}
 		});
-		btnReturnBook = new JButton("Return Book");
+        JButton btnReturnBook = new JButton("Return Book");
 		setButtonLook(btnReturnBook);
 		btnReturnBook.setBounds(70, 350, 125, 30);
 		btnReturnBook.addActionListener(new ActionListener() {
@@ -197,13 +184,13 @@ public class GUI {
 		addBookPanel.add(bookYearLabel);
 		JLabel bookTypeLabel = new JLabel("Book Type");
 		bookTypeLabel.setBounds(80, 240, 100, 30);
-		JComboBox<String> typeComboBox = new JComboBox<>(new String[]{"novel", "encyclopedia", "poetry"});
+		JComboBox<String> typeComboBox = new JComboBox<>(new String[]{"Novel", "Encyclopedia", "Poetry"});
 		typeComboBox.setBounds(155, 240, 150, 30);
 		addBookPanel.add(bookTypeLabel);
 		addBookPanel.add(typeComboBox);
 
-		bookNameTxt.addActionListener(e -> bookAuthorTxt.requestFocusInWindow());
-		bookAuthorTxt.addActionListener(e -> bookYearTxt.requestFocusInWindow());
+		bookNameTxt.addActionListener(_ -> bookAuthorTxt.requestFocusInWindow());
+		bookAuthorTxt.addActionListener(_ -> bookYearTxt.requestFocusInWindow());
 
 		JButton backButton = new JButton("Back");
 		setButtonLook(backButton);
@@ -276,7 +263,7 @@ public class GUI {
 		borrowBookMessage.setFont(new Font("Californian FB", Font.BOLD, 20));
 		borrowBookMessage.setBounds(175, 40, 650, 30);
 
-		borrowBookFormPanel = new JPanel(null);
+        JPanel borrowBookFormPanel = new JPanel(null);
 		borrowBookFormPanel.setBackground(new Color(222, 222, 225));
 		borrowBookFormPanel.setBounds(80, 100, 400, 300);
 
@@ -295,7 +282,7 @@ public class GUI {
 		borrowBookFormPanel.add(borrowerIdLabel);
 		borrowBookFormPanel.add(borrowerIdTxt);
 
-		bookIdTxt.addActionListener(e -> borrowerIdTxt.requestFocusInWindow());
+		bookIdTxt.addActionListener(_ -> borrowerIdTxt.requestFocusInWindow());
 
 		JButton borrowBookButton = new JButton("Borrow Book");
 		setButtonLook(borrowBookButton);
@@ -403,13 +390,13 @@ public class GUI {
 		addMemberPanel.add(memberAgeTxt);
 		JLabel memberGenderLabel = new JLabel("Member Gender");
 		memberGenderLabel.setBounds(80, 190, 100, 30);
-		JComboBox<String> genderComboBox = new JComboBox<>(new String[]{"male", "female"});
+		JComboBox<String> genderComboBox = new JComboBox<>(new String[]{"Male", "Female"});
 		genderComboBox.setBounds(180, 190, 75, 30);
 		addMemberPanel.add(memberGenderLabel);
 		addMemberPanel.add(genderComboBox);
 		genderComboBox.setSelectedItem(null);
 
-		memberNameTxt.addActionListener(e -> memberAgeTxt.requestFocusInWindow());
+		memberNameTxt.addActionListener(_ -> memberAgeTxt.requestFocusInWindow());
 
 		JLabel tableTitleLabel = new JLabel("Existing Members", SwingConstants.CENTER);
 		tableTitleLabel.setBounds(610, 80, 200, 30);
@@ -477,7 +464,7 @@ public class GUI {
 		returnBookMessage.setFont(new Font("Californian FB", Font.BOLD, 20));
 		returnBookMessage.setBounds(175, 40, 650, 30);
 
-		returnBookFormPanel = new JPanel(null);
+        JPanel returnBookFormPanel = new JPanel(null);
 		returnBookFormPanel.setBackground(new Color(222, 222, 225));
 		returnBookFormPanel.setBounds(80, 100, 400, 300);
 
@@ -593,6 +580,16 @@ public class GUI {
 			DefaultTableModel model = BookDatabase.listAllBooks();
 			allBooksTable.setModel(model);
 		}
+		if(allBooksTable != null) {
+			allBooksTable.setDefaultEditor(Object.class, null);
+			TableColumnModel columnModel = allBooksTable.getColumnModel();
+			int[] widths = {30, 80, 150, 120, 70, 70, 80};
+			for (int i = 0; i < widths.length; i++) {
+				columnModel.getColumn(i).setPreferredWidth(widths[i]);
+				columnModel.getColumn(i).setResizable(false);
+			}
+			allBooksTable.setDefaultEditor(Object.class, null); // hücre düzenlemesini engelle
+		}
 	}
 
 	private void refreshAvailableBookTable() {
@@ -600,11 +597,29 @@ public class GUI {
 			DefaultTableModel model = BookDatabase.listAvailableBooks();
 			availableBookTable.setModel(model);
 		}
+		if (availableBookTable != null) {
+			TableColumnModel columnModel = availableBookTable.getColumnModel();
+			int[] widths = {30, 90, 150, 120, 70, 60, 80};
+			for (int i = 0; i < widths.length; i++) {
+				columnModel.getColumn(i).setPreferredWidth(widths[i]);
+				columnModel.getColumn(i).setResizable(false);
+			}
+			availableBookTable.setDefaultEditor(Object.class, null); // hücre düzenlemesini engelle
+		}
 	}
 	private void refreshBorrowedBookTable() {
 		if (borrowedBookTable != null) {
 			DefaultTableModel model = BookDatabase.listBorrowedBooks();
 			borrowedBookTable.setModel(model);
+		}
+		if (borrowedBookTable != null) {
+			TableColumnModel columnModel = borrowedBookTable.getColumnModel();
+			int[] widths = {30, 90, 150, 120, 70, 60, 80};
+			for (int i = 0; i < widths.length; i++) {
+				columnModel.getColumn(i).setPreferredWidth(widths[i]);
+				columnModel.getColumn(i).setResizable(false);
+			}
+			borrowedBookTable.setDefaultEditor(Object.class, null); // hücre düzenlemesini engelle
 		}
 	}
 
@@ -612,6 +627,15 @@ public class GUI {
 		if (memberTable != null) {
 			DefaultTableModel model = MemberDatabase.listMembers();
 			memberTable.setModel(model);
+		}
+		if (memberTable != null) {
+			TableColumnModel columnModel = memberTable.getColumnModel();
+			int[] widths = {20, 150, 60, 80, 60};
+			for (int i = 0; i < widths.length; i++) {
+				columnModel.getColumn(i).setPreferredWidth(widths[i]);
+				columnModel.getColumn(i).setResizable(false);
+			}
+			memberTable.setDefaultEditor(Object.class, null); // hücre düzenlemesini engelle
 		}
 	}
 
