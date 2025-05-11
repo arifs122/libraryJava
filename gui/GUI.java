@@ -20,6 +20,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Objects;
 
 
 
@@ -224,7 +225,7 @@ public class GUI {
 					String name = bookNameTxt.getText();
 					String author = bookAuthorTxt.getText();
 					int year = Integer.parseInt(bookYearTxt.getText());
-					String type = typeComboBox.getSelectedItem().toString();
+					String type = Objects.requireNonNull(typeComboBox.getSelectedItem()).toString();
 					//book nesnesini kitap türüne göre factory design pattern ile oluşturuyoruz
 					Book book = BookFactory.create(type, name, author, year, null);
 					JOptionPane.showMessageDialog(null, "Book added successfully.");
@@ -311,6 +312,7 @@ public class GUI {
 						JOptionPane.showMessageDialog(null, "You can't borrow an encyclopedia.","Borrow Error", JOptionPane.WARNING_MESSAGE);
 						return;
 					}
+                    assert member != null;
                     if (!(member.getCanBorrow())){
 						JOptionPane.showMessageDialog(null, "The member with that ID can't borrow a book.","Borrow Error", JOptionPane.WARNING_MESSAGE);
 						return;
@@ -438,7 +440,7 @@ public class GUI {
 				try {
 					String name = memberNameTxt.getText();
 					int age = Integer.parseInt(memberAgeTxt.getText());
-					String gender = genderComboBox.getSelectedItem().toString();
+					String gender = Objects.requireNonNull(genderComboBox.getSelectedItem()).toString();
 					Member member = new Member(name, age, gender, true);
 					MemberDatabase.insertMember(member);
 					refreshMemberTable();
@@ -501,7 +503,8 @@ public class GUI {
 						return;
 					}
 					BookDatabase.updateBookAvailability(bookId,true, null);
-					MemberDatabase.updateMemberCanBorrow(book.getBorrowerId(),true);
+                    assert book != null;
+                    MemberDatabase.updateMemberCanBorrow(book.getBorrowerId(),true);
 					refreshAllBooksTable();
 					refreshAvailableBookTable();
 					refreshBorrowedBookTable();

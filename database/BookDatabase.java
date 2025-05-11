@@ -113,7 +113,7 @@ public class BookDatabase {
         model.addColumn("Availability");
         model.addColumn("Borrower ID");
 
-        String sql = "SELECT * FROM books WHERE availability=1 AND booktype != \"encyclopedia\"";
+        String sql = "SELECT * FROM books WHERE availability=1";
         try(Connection conn = DriverManager.getConnection(URL);
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql)){
@@ -151,7 +151,7 @@ public class BookDatabase {
         model.addColumn("Availability");
         model.addColumn("Borrower ID");
 
-        String sql = "SELECT * FROM books WHERE availability=0 AND booktype != \"encyclopedia\"";
+        String sql = "SELECT * FROM books WHERE availability=0";
         try(Connection conn = DriverManager.getConnection(URL);
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql)){
