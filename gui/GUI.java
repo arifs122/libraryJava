@@ -145,7 +145,15 @@ public class GUI {
 		btnReturnBook.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { cardLayout.show(mainPanel, "ReturnBookPanel");}
 		});
-
+		JButton aboutButton = new JButton("About");
+		setButtonLook(aboutButton);
+		aboutButton.setBounds(880, 420, 80, 30);
+		aboutButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showAboutMessage();
+			}
+		});
+		homePanel.add(aboutButton);
 		homePanel.add(btnAddMember);
 		homePanel.add(btnAddBooks);
 		homePanel.add(btnBorrowBook);
@@ -661,5 +669,31 @@ public class GUI {
 				}
 			}
 		});
+	}
+	private void showAboutMessage() {
+		String message = """
+                Welcome!
+                
+                - You can add,borrow,return books and add members.
+                - Members and books are being stored in databases.
+                - Member and book id's are being assigned automatically.
+                - Encyclopedias are not borrowable.
+                - Members can only borrow 1 book at a time.
+                - You can select your book by clicking to list in borrow menu.
+                - You can surf between input boxes with enter.\s""";
+
+		JTextArea textArea = new JTextArea(message);
+		textArea.setWrapStyleWord(true);
+		textArea.setLineWrap(true);
+		textArea.setEditable(false);
+		textArea.setFocusable(false);
+		textArea.setBackground(null);
+		textArea.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		textArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+		JScrollPane scrollPane = new JScrollPane(textArea);
+		scrollPane.setPreferredSize(new Dimension(350, 200));
+
+		JOptionPane.showMessageDialog(null, scrollPane, "About Library Management System", JOptionPane.INFORMATION_MESSAGE);
 	}
 }
