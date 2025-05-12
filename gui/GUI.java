@@ -330,7 +330,7 @@ public class GUI {
 		});
 		borrowBookFormPanel.add(borrowBookButton);
 
-		JLabel tableTitleLabel = new JLabel("Borrowable Books", SwingConstants.CENTER);
+		JLabel tableTitleLabel = new JLabel("On-Shelf Books", SwingConstants.CENTER);
 		tableTitleLabel.setBounds(560, 80, 200, 30);
 		tableTitleLabel.setFont(new Font("Californian FB", Font.BOLD, 15));
 		borrowBookPanel.add(tableTitleLabel);
@@ -674,9 +674,9 @@ public class GUI {
 		String message = """
                 Welcome!
                 
-                - You can add,borrow,return books and add members.
+                - You can add, borrow, return books and add members.
                 - Members and books are being stored in databases.
-                - Member and book id's are being assigned automatically.
+                - Member and book ID's are being assigned automatically.
                 - Encyclopedias are not borrowable.
                 - Members can only borrow 1 book at a time.
                 - You can select your book by clicking to list in borrow menu.
