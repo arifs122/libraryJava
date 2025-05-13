@@ -21,41 +21,14 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Objects;
 
+/*Tüm kullanıcı arayüzünün hazırlandığı class.
+JavaSwing kullanıldı ve tüm işlemler CardLayout kullanılarak 1 frame üstünde yapılıyor
+Gerekli yerlerde karakter/sayı girişleri engellendi
+Hatalı işlemlerde hata mesajları ile kullanıcı uyarılıyor
+Kod temizliğini sağlamak amacıyla tekrar eden kod parçaları metodlar ile yönetildi
+Tablolu panellerde form ve tablo olmak üzere 2 ayrı panel kullanıldı
+* */
 
-
-/*bir tane ana frame imiz olacak ve her işlem yaptıgımızda
- * o framedeki her şeyi kaldırıp istedigimiz yeni framedekileri
- * ekleyecegiz. bunun icin ya manuel olarak frame.removeAll()
- * ya da cardLayout(swingin kendisinden) kullanılabilir.
- * butonların ve framelerin olabildigince metodlarin
- * icinde olması kodun temizligini arttirir.
- * ornegin public void btnKitapListele(){} metodu yapilip
- * guiStart içinde gereken yerde calistirilirsa hem kodu
- * birlestirmek kolay olacak daha sonrasında da kodun oku
- * nabilirligi artmis olacak
- * */
-/*borrow book ve return book sadece gui da butonlar olarak var olacak
- * işlemleri updateBook ve updateMember üstünden yönetcez
- * ansiklopedi alınmaya çalışıldığında ya da mevcut olan bir kitap ödünç
- * alınmaya çalışırsa hata mesajı verilip işlem yapılmayacak o yüzden if
- * blokları kullanılmalı */
-
-/*ana menu framei
- * uye ekle üyeleri listele
- * kitap ekle kitapları listele oduncteki kitaplar mevcut kitaplar
- * kitap odunc al kitap geri al
- *
- *uye ekle framei
- *isim dogum yili kaydet geri
- *kitap ekle framei
- *isim yazar yazım yılı kaydet geri
- *kitap odunc al framei
- *kitap id üye id geri
- *kitap geri ver
- *kitap id (whohasbookdan kim odunc aldiysa bulunup canborrow tam tersine cevrilcek) geri
- *listelemeler db icinde gui kodları da o metodda olacak(defaulttablemodel) geri
- *
- * */
 public class GUI {
 
 	private JFrame mainFrame;
@@ -73,7 +46,7 @@ public class GUI {
 	private JTable memberTable;
 
 
-	//mainde cagirabilmek icin gui islemleri start icine yazılcak
+	// mainde arayüzü başlatmak için çağırılacak metod
 	public void guiStart() {
 
 		mainFrame = new JFrame("Library Management System");
@@ -94,7 +67,7 @@ public class GUI {
 		createBorrowBookPanel();
 		createReturnBookPanel();
 
-		//oluşturulan kartları mainpanele ekliyoruz geçiş yaparken burdan yapılcakbo
+		//oluşturulan kartları mainpanele ekliyoruz geçiş yaparken burdan yapılacak
 		mainPanel.add(homePanel, "HomePanel");
 		mainPanel.add(addBookPanel, "AddBookPanel");
 		mainPanel.add(borrowBookPanel, "BorrowBookPanel");
@@ -105,15 +78,15 @@ public class GUI {
 		mainFrame.add(mainPanel);
 		mainFrame.setVisible(true);
 	}
-
-	private void createHomePanel() {//ana ekran kartı
+	//ana ekran kartı oluşturuluyor
+	private void createHomePanel() {
 		homePanel = new JPanel(null);
 		homePanel.setBackground(new Color(222, 222, 225));
 		WelcomeLabel();
 		addHomeButtons();
 	}
 
-	//ana sayfadaki butonlar buraya
+	//ana sayfadaki butonlar oluşturuluyor ve action'ları atanıyor
 	private void addHomeButtons() {
         JButton btnAddBooks = new JButton("Add Book");
 		setButtonLook(btnAddBooks);
@@ -161,7 +134,7 @@ public class GUI {
 
 	}
 
-	//add book butonuna tıklanınca geçilecek olan panel
+	//add book butonuyla açılan kitap ekleme paneli
 	private void createAddBookPanel() {
 		addBookPanel = new JPanel(null);
 		addBookPanel.setBackground(new Color(222, 222, 225));
@@ -192,14 +165,16 @@ public class GUI {
 		addBookPanel.add(bookYearLabel);
 		JLabel bookTypeLabel = new JLabel("Book Type");
 		bookTypeLabel.setBounds(80, 240, 100, 30);
+		//seçilebilir 3 kitap türü için kutu
 		JComboBox<String> typeComboBox = new JComboBox<>(new String[]{"Novel", "Encyclopedia", "Poetry"});
 		typeComboBox.setBounds(155, 240, 150, 30);
 		addBookPanel.add(bookTypeLabel);
 		addBookPanel.add(typeComboBox);
-
+		//enter tuşu ile textboxlar arası geçiş yapmak için
 		bookNameTxt.addActionListener(_ -> bookAuthorTxt.requestFocusInWindow());
 		bookAuthorTxt.addActionListener(_ -> bookYearTxt.requestFocusInWindow());
 
+		//geri butonu
 		JButton backButton = new JButton("Back");
 		setButtonLook(backButton);
 		backButton.setBounds(850, 400, 100, 30);
@@ -209,7 +184,6 @@ public class GUI {
 			}
 		});
 		addBookPanel.add(backButton);
-
 
 		JButton addBookButton = new JButton("Add Book");
 		setButtonLook(addBookButton);
@@ -228,6 +202,7 @@ public class GUI {
 					bookAuthorTxt.setText("");
 					bookYearTxt.setText("");
 					BookDatabase.insertBook(book);
+					//işlem gerçekleştiğinde tablolar yenileniyor
 					refreshAllBooksTable();
 					refreshAvailableBookTable();
 					refreshBorrowedBookTable();
@@ -241,6 +216,7 @@ public class GUI {
 		});
 		addBookPanel.add(addBookButton);
 
+		//tüm kitapların listelendiği tablo ve başlığı
 		JLabel tableTitleLabel = new JLabel("All Books", SwingConstants.CENTER);
 		tableTitleLabel.setBounds(550, 80, 200, 30);
 		tableTitleLabel.setFont(new Font("Californian FB", Font.BOLD, 15));
@@ -263,7 +239,7 @@ public class GUI {
 
 
 	}
-
+	//borrow book butonuyla açılan ödünç alma işleminin yapıldığı panel
 	private void createBorrowBookPanel() {
 		borrowBookPanel = new JPanel(null);
 		borrowBookPanel.setBackground(new Color(222, 222, 225));
@@ -289,7 +265,7 @@ public class GUI {
 		setNumberRules(borrowerIdTxt);
 		borrowBookFormPanel.add(borrowerIdLabel);
 		borrowBookFormPanel.add(borrowerIdTxt);
-
+		//textboxlar arası enter ile geçiş
 		bookIdTxt.addActionListener(_ -> borrowerIdTxt.requestFocusInWindow());
 
 		JButton borrowBookButton = new JButton("Borrow Book");
@@ -303,17 +279,20 @@ public class GUI {
 					int bookId = Integer.parseInt(bookIdTxt.getText());
 					Book book = BookDatabase.getBookById(bookId);
 					Member member = MemberDatabase.getMemberById(id);
+					//ansiklopedilerin ödünç alınamaması için implement edilen NotBorrowable instanceof ile kontrol ediliyor
 					if (book instanceof NotBorrowable) {
 						JOptionPane.showMessageDialog(null, "You can't borrow an encyclopedia.","Borrow Error", JOptionPane.WARNING_MESSAGE);
 						return;
 					}
                     assert member != null;
+					//eğer bu kitabı almak isteyen üyenin halihazırda ödünç aldığı bi kitap varsa kitabı alamıyor
                     if (!(member.getCanBorrow())){
 						JOptionPane.showMessageDialog(null, "The member with that ID can't borrow a book.","Borrow Error", JOptionPane.WARNING_MESSAGE);
 						return;
 					}
 					BookDatabase.updateBookAvailability(bookId,false, id);
 					MemberDatabase.updateMemberCanBorrow(id,false);
+					//işlem gerçekleştiğinde tablolar yenileniyor
 					refreshAllBooksTable();
 					refreshAvailableBookTable();
 					refreshBorrowedBookTable();
@@ -329,7 +308,7 @@ public class GUI {
 			}
 		});
 		borrowBookFormPanel.add(borrowBookButton);
-
+		//ödünç alınabilecek kitaplarin tablosu ve başlığı
 		JLabel tableTitleLabel = new JLabel("On-Shelf Books", SwingConstants.CENTER);
 		tableTitleLabel.setBounds(560, 80, 200, 30);
 		tableTitleLabel.setFont(new Font("Californian FB", Font.BOLD, 15));
@@ -337,7 +316,7 @@ public class GUI {
 
 		DefaultTableModel model = BookDatabase.listAvailableBooks();
 		availableBookTable = new JTable(model);
-
+		//tabloda istenilen kitaba tıklanarak kitap seçilebiliyor
 		availableBookTable.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				int selectedRow = availableBookTable.getSelectedRow();
@@ -360,7 +339,7 @@ public class GUI {
 		scrollPane.setBounds(350, 100, 600, 250);
 		borrowBookPanel.add(scrollPane);
 
-
+		//geri butonu
 		JButton backButton = new JButton("Back");
 		setButtonLook(backButton);
 		backButton.setBounds(850, 400, 100, 30);
@@ -374,7 +353,7 @@ public class GUI {
 		borrowBookPanel.add(borrowBookMessage);
 		borrowBookPanel.add(borrowBookFormPanel);
 	}
-
+	//add member butonuyla açılan üye ekleme paneli
 	private void createAddMemberPanel() {
 		addMemberPanel = new JPanel(null);
 		addMemberPanel.setBackground(new Color(222, 222, 225));
@@ -398,14 +377,16 @@ public class GUI {
 		addMemberPanel.add(memberAgeTxt);
 		JLabel memberGenderLabel = new JLabel("Member Gender");
 		memberGenderLabel.setBounds(80, 190, 100, 30);
+		//member cinsiyeti için 2 seçenekli kutu
 		JComboBox<String> genderComboBox = new JComboBox<>(new String[]{"Male", "Female"});
 		genderComboBox.setBounds(180, 190, 75, 30);
 		addMemberPanel.add(memberGenderLabel);
 		addMemberPanel.add(genderComboBox);
 		genderComboBox.setSelectedItem(null);
-
+		//enter ile textboxlar arasi geçiş
 		memberNameTxt.addActionListener(_ -> memberAgeTxt.requestFocusInWindow());
 
+		//var olan üyelerin listelendiği tablo ve başlığı
 		JLabel tableTitleLabel = new JLabel("Existing Members", SwingConstants.CENTER);
 		tableTitleLabel.setBounds(610, 80, 200, 30);
 		tableTitleLabel.setFont(new Font("Californian FB", Font.BOLD, 15));
@@ -413,7 +394,6 @@ public class GUI {
 
 		DefaultTableModel model = MemberDatabase.listMembers();
 		memberTable = new JTable(model);
-
 
 		//table sutunları artık ayarlanamıyor ve kendimiz büyüklüklerini ayarladık
 		memberTable.setDefaultEditor(Object.class, null);
@@ -464,7 +444,7 @@ public class GUI {
 		});
 		addMemberPanel.add(backButton);
 	}
-
+	//return book butonuyla açılan kitap geri verme metodu
 	private void createReturnBookPanel() {
 		returnBookPanel = new JPanel(null);
 		returnBookPanel.setBackground(new Color(222, 222, 225));
@@ -513,7 +493,7 @@ public class GUI {
 			}
 		});
 		returnBookFormPanel.add(returnBookButton);
-
+		//ödünç alınmış kitaplar tablosu ve başlığı
 		JLabel tableTitleLabel = new JLabel("Already Borrowed Books", SwingConstants.CENTER);
 		tableTitleLabel.setBounds(550, 80, 200, 30);
 		tableTitleLabel.setFont(new Font("Californian FB", Font.BOLD, 15));
@@ -558,7 +538,7 @@ public class GUI {
 		returnBookPanel.add(returnBookMessage);
 		returnBookPanel.add(returnBookFormPanel);
 	}
-
+	//ana menüde welcome mesajı için metod
 	private void WelcomeLabel() {
 		JLabel lblWelcome = new JLabel("Welcome to the Library Management System! Select an option to continue.", SwingConstants.CENTER);
 		lblWelcome.setFont(new Font("Californian FB", Font.BOLD, 20));
@@ -566,7 +546,7 @@ public class GUI {
 		mainFrame.add(lblWelcome);
 	}
 
-	//buttonların görünümleri için metod
+	//button görünümleri için metod
 	private void setButtonLook(JButton button) {
 		button.setFocusPainted(false);
 		button.setContentAreaFilled(true);
@@ -577,12 +557,12 @@ public class GUI {
 		button.setFont(new Font("Californian FB", Font.BOLD, 13));
 	}
 
-	//ana menünye dönmek için back buttonlarının içinde olacak metod
+	//ana menüye dönerken kullanılacak back butonlarının içindeki metod
 	private void back() {
 		cardLayout.show(mainPanel, "HomePanel");
 		WelcomeLabel();
 	}
-
+	//işlemler sonrası tabloları güncel tutmak için metod
 	private void refreshAllBooksTable() {
 		if (allBooksTable != null) {
 			DefaultTableModel model = BookDatabase.listAllBooks();
@@ -599,12 +579,13 @@ public class GUI {
 			allBooksTable.setDefaultEditor(Object.class, null); // hücre düzenlemesini engelle
 		}
 	}
-
+	//işlemler sonrası tabloları güncel tutmak için metod
 	private void refreshAvailableBookTable() {
 		if (availableBookTable != null) {
 			DefaultTableModel model = BookDatabase.listAvailableBooks();
 			availableBookTable.setModel(model);
 		}
+		//yenilendikten sonra tablo şekli tekrardan yapılıyor
 		if (availableBookTable != null) {
 			TableColumnModel columnModel = availableBookTable.getColumnModel();
 			int[] widths = {30, 90, 150, 120, 70, 60, 80};
@@ -615,11 +596,13 @@ public class GUI {
 			availableBookTable.setDefaultEditor(Object.class, null); // hücre düzenlemesini engelle
 		}
 	}
+	//işlemler sonrası tabloları güncel tutmak için metod
 	private void refreshBorrowedBookTable() {
 		if (borrowedBookTable != null) {
 			DefaultTableModel model = BookDatabase.listBorrowedBooks();
 			borrowedBookTable.setModel(model);
 		}
+		//yenilendikten sonra tablo şekli tekrardan yapılıyor
 		if (borrowedBookTable != null) {
 			TableColumnModel columnModel = borrowedBookTable.getColumnModel();
 			int[] widths = {30, 90, 150, 120, 70, 60, 80};
@@ -630,12 +613,13 @@ public class GUI {
 			borrowedBookTable.setDefaultEditor(Object.class, null); // hücre düzenlemesini engelle
 		}
 	}
-
+	//işlemler sonrası tabloları güncel tutmak için metod
 	private void refreshMemberTable() {
 		if (memberTable != null) {
 			DefaultTableModel model = MemberDatabase.listMembers();
 			memberTable.setModel(model);
 		}
+		//yenilendikten sonra tablo şekli tekrardan yapılıyor
 		if (memberTable != null) {
 			TableColumnModel columnModel = memberTable.getColumnModel();
 			int[] widths = {20, 150, 60, 80, 60};
@@ -646,7 +630,7 @@ public class GUI {
 			memberTable.setDefaultEditor(Object.class, null); // hücre düzenlemesini engelle
 		}
 	}
-
+	//sadece rakaml girilmesi gereken textboxlara implement edilen metod
 	public void setNumberRules(JTextField numberRules) {
 		numberRules.setDocument(new PlainDocument() {
 			@Override
@@ -658,18 +642,19 @@ public class GUI {
 			}
 		});
 	}
-
+	//sadece karakter girilmesi gereken textboxlara implement edilen metod
 	public void setCharacterRules(JTextField characterRules) {
 		characterRules.setDocument(new PlainDocument() {
 			@Override
 			public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
 				if (str == null) return;
-				if (str.matches("[a-zA-Z\\s]+")) {
+				if (str.matches("[a-zA-Z\\s]+")) { // sadece harfler izinli
 					super.insertString(offs, str, a);
 				}
 			}
 		});
 	}
+	//ana menüde kullanıcıyı bilgilendirme amaçlı butonun metodu
 	private void showAboutMessage() {
 		String message = """
                 Welcome!

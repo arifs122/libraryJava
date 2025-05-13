@@ -5,12 +5,16 @@ import model.Member;
 
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
-/*addMember listMembers showMemberInfo metodları burada
- * */
+
+/*Üyelerle ilgili database işlemlerinin yapıldığı class.
+Üye ekleme,listeleme ve güncelleme metodları bulunuyor.
+* */
+
+
 public class MemberDatabase {
     private static final String URL = "jdbc:sqlite:members1.db";
     private static Connection conn;
-
+    //database'e bağlanma
     public static void connect() {
         try {
             conn = DriverManager.getConnection(URL);
@@ -19,7 +23,7 @@ public class MemberDatabase {
             System.err.println("Error while trying to connect to the member database: " + e.getMessage());
         }
     }
-
+    //database tablosu yoksa oluşturuluyor ve hazırlanıyor
     public static void initializeDB() {
         String sql = "CREATE TABLE IF NOT EXISTS members ("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -37,7 +41,7 @@ public class MemberDatabase {
             System.exit(1);
         }
     }
-
+    //database'e member ekleme metodu
     public static void insertMember(Member member) {
         String sql = "INSERT INTO members (membername, memberage, membergender) VALUES (?, ?, ?)";
 
@@ -55,14 +59,15 @@ public class MemberDatabase {
         }
 
     }
-
+    //tüm memberları listeleyen metod
     public static DefaultTableModel listMembers() {
+        //table gösterilirken hücreler artık değiştirilemeyecek
         DefaultTableModel model = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
-        };//table gösterilirken hücreler artık değiştirilemeyecek
+        };
         model.addColumn("ID");
         model.addColumn("Member Name");
         model.addColumn("Member Age");
@@ -89,7 +94,7 @@ public class MemberDatabase {
         }
         return model;
     }
-
+    //member'in kitap alabilme durumunu güncelleyen metod
     public static void updateMemberCanBorrow(int memberId, boolean canBorrow) {
         String sql = "UPDATE members SET canborrow = ? WHERE id = ?";
 
@@ -108,6 +113,7 @@ public class MemberDatabase {
             System.err.println("Üye bilgisi güncellenirken hata oluştu: " + e.getMessage());
         }
     }
+    //ödünç alma ve geri verme işlemlerinde işlemi yapan üyeyi database'den bulmak için
     public static Member getMemberById(int memberId) {
         String sql = "SELECT * FROM members WHERE id = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {

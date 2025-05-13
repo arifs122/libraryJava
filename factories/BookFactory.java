@@ -1,5 +1,10 @@
 package factories;
 import model.*;
+
+/*Factory design pattern kullanılarak kullanıcının girdiği
+kitap türüne göre kitap oluşturuluyor.
+* */
+
 public class BookFactory {
     public static Book create(String bookType, String bookName, String bookAuthor, int bookYear, Integer borrowerId) {
         boolean isBorrowed = false;

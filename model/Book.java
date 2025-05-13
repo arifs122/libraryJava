@@ -1,5 +1,6 @@
 package model;
-
+/*Diğer kitapların üretileceği abstract book class'ı
+* */
 public abstract class Book {
     private String bookType;
     private String bookName;

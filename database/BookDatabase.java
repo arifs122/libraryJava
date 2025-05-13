@@ -5,12 +5,15 @@ import model.Book;
 
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
-/*addBook listBooks showBookInfo gibi metodlar burada olacak
- * */
+
+/*Kitaplarla ilgili database işlemlerinin olduğu class.
+Bağlanma,tablo hazırlama,kitap ekleme, listeleme, güncelleme metodları bulunuyor.
+* */
+
 public class BookDatabase {
 	private static final String URL = "jdbc:sqlite:books1.db";
     private static Connection conn;
-    
+    //database'e bağlanma
     public static void connect() {
     	try{
     		conn = DriverManager.getConnection(URL);
@@ -19,7 +22,7 @@ public class BookDatabase {
     		System.err.println("Error while trying to connect to the book database: "+e.getMessage());
     	}
     }
-    
+    //database tablosu yoksa oluşturuluyor ve hazırlanıyor
     public static void initializeDB() {
     	String sql = "CREATE TABLE IF NOT EXISTS books ("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -27,8 +30,8 @@ public class BookDatabase {
                 + "bookname TEXT NOT NULL,"
                 + "bookauthor TEXT NOT NULL,"
                 + "bookyear INTEGER NOT NULL,"
-                + "availability INTEGER NOT NULL DEFAULT 1 CHECK(availability IN (0, 1)),"
-                + "borrowerid INTEGER DEFAULT NULL)";
+                + "availability INTEGER NOT NULL DEFAULT 1 CHECK(availability IN (0, 1))," //kitap eklendiğinde durumu varsayılan olarak 1
+                + "borrowerid INTEGER DEFAULT NULL)"; // kitap eklendiğinde varsayılan olarak ödünç alan kişi yok
      
      try (Statement stmt = conn.createStatement()) {
          stmt.execute(sql);
@@ -39,9 +42,9 @@ public class BookDatabase {
          System.exit(1);
      }
     }
-    
-        public static void insertBook(Book book) {
-    String sql = "INSERT INTO books (booktype, bookname, bookauthor, bookyear) VALUES (?, ?, ?, ?)";
+    //kitapları database'e ekleme metodu
+    public static void insertBook(Book book) {
+        String sql = "INSERT INTO books (booktype, bookname, bookauthor, bookyear) VALUES (?, ?, ?, ?)";
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
         pstmt.setString(1, book.getBookType());
@@ -50,21 +53,23 @@ public class BookDatabase {
         pstmt.setInt(4, book.getBookYear());
 
         // borrower id ve availability book oluştururken default olarak ekleniyor
-        pstmt.executeUpdate();            // Komutu çalıştırır
+        pstmt.executeUpdate();
         System.out.println("Book added succesfully.");
     } catch (SQLException e) {
         System.err.println("Error while trying to add book: " + e.getMessage());
     }
 
 }
-
+    //tüm kitapları listeleme metodu
     public static DefaultTableModel listAllBooks() {
+        //table gösterilirken hücreler artık değiştirilemeyecek
         DefaultTableModel model = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
-        };//table gösterilirken hücreler artık değiştirilemeyecek
+        };
+
         model.addColumn("ID");
         model.addColumn("Book Type");
         model.addColumn("Book Name");
@@ -86,7 +91,7 @@ public class BookDatabase {
                 int bookYear = rs.getInt("bookyear");
                 String availability = rs.getString("availability");
                 String borrowerIdStr = rs.getString("borrowerid");
-                Integer borrowerId = borrowerIdStr == null ? null : Integer.parseInt(borrowerIdStr); //nullsa alamıyor yoksa
+                Integer borrowerId = borrowerIdStr == null ? null : Integer.parseInt(borrowerIdStr);
                 Object[] row = { id, bookType, bookName, bookAuthor, bookYear, availability, borrowerId };
                 model.addRow(row);
             }
@@ -95,14 +100,15 @@ public class BookDatabase {
         }
         return model;
     }
-
+    //mevcut kitapları listeleme metodu
     public static DefaultTableModel listAvailableBooks() {
+        //table gösterilirken hücreler artık değiştirilemeyecek
         DefaultTableModel model = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
-        };//table gösterilirken hücreler artık değiştirilemeyecek
+        };
         model.addColumn("ID");
         model.addColumn("Book Type");
         model.addColumn("Book Name");
@@ -124,7 +130,7 @@ public class BookDatabase {
                 int bookYear = rs.getInt("bookyear");
                 String availability = rs.getString("availability");
                 String borrowerIdStr = rs.getString("borrowerid");
-                Integer borrowerId = borrowerIdStr == null ? null : Integer.parseInt(borrowerIdStr); //nullsa alamıyor yoksa
+                Integer borrowerId = borrowerIdStr == null ? null : Integer.parseInt(borrowerIdStr);
                 Object[] row = { id, bookType, bookName, bookAuthor, bookYear, availability, borrowerId };
                 model.addRow(row);
             }
@@ -133,14 +139,15 @@ public class BookDatabase {
         }
         return model;
     }
-
+    //ödünçteki kitapları listeleme metodu
     public static DefaultTableModel listBorrowedBooks() {
+        //table gösterilirken hücreler artık değiştirilemeyecek
         DefaultTableModel model = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
-        };//table gösterilirken hücreler artık değiştirilemeyecek
+        };
         model.addColumn("ID");
         model.addColumn("Book Type");
         model.addColumn("Book Name");
@@ -162,7 +169,7 @@ public class BookDatabase {
                 int bookYear = rs.getInt("bookyear");
                 String availability = rs.getString("availability");
                 String borrowerIdStr = rs.getString("borrowerid");
-                Integer borrowerId = borrowerIdStr == null ? null : Integer.parseInt(borrowerIdStr); //nullsa alamıyor yoksa
+                Integer borrowerId = borrowerIdStr == null ? null : Integer.parseInt(borrowerIdStr);
                 Object[] row = { id, bookType, bookName, bookAuthor, bookYear, availability, borrowerId };
                 model.addRow(row);
             }
@@ -171,20 +178,20 @@ public class BookDatabase {
         }
         return model;
     }
-
+    //kitap durumunu(mevcut/ödünçte) güncelleyen metod
     public static void updateBookAvailability(int bookId, boolean isAvailable, Integer borrowerId) {
             String sql = "UPDATE books SET availability = ?, borrowerid = ? WHERE id = ?";
         
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setInt(1, isAvailable ? 1 : 0); // 1: müsait, 0: ödünçte
                 if (borrowerId != null) {
-                    pstmt.setInt(2, borrowerId);      // borrowerid verildi ise güncelle
+                    pstmt.setInt(2, borrowerId);
                 } else {
-                    pstmt.setNull(2, Types.INTEGER);  // borrowerid null yapılır
+                    pstmt.setNull(2, Types.INTEGER);
                 }
-                pstmt.setInt(3, bookId);              // Hangi kitap güncelleniyor?
+                pstmt.setInt(3, bookId);
         
-                int affected = pstmt.executeUpdate(); // Güncellenen satır sayısı
+                int affected = pstmt.executeUpdate();
                 if (affected > 0) {
                     System.out.println("Book updated successfully.");
                 } else {
@@ -196,7 +203,7 @@ public class BookDatabase {
             }
         }
 
-
+    //kitap ödünç alma ve geri verme işlemlerinde databaseden o kitabı seçmek için metod
     public static Book getBookById(int bookId) {
         String sql = "SELECT * FROM books WHERE id = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -209,10 +216,8 @@ public class BookDatabase {
                 String author = rs.getString("bookauthor");
                 int year = rs.getInt("bookyear");
                 String borrowerIdStr = rs.getString("borrowerid");
-                Integer borrowerId = borrowerIdStr == null ? null : Integer.parseInt(borrowerIdStr); //nullsa alamıyor yoks
+                Integer borrowerId = borrowerIdStr == null ? null : Integer.parseInt(borrowerIdStr);
 
-
-                // BookFactory'den uygun kitap nesnesini al
                 return BookFactory.create(type,name,author,year, borrowerId);
             } else {
                 return null;

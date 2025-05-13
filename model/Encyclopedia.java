@@ -1,7 +1,8 @@
 package model;
 
 import interfaces.NotBorrowable;
-//ansiklopedi ödünç alınamayacağı için notborrowable implement ediyor
+//bookdan kalıtımla oluşturulan ve NotBorrowable inteface'ini implement eden Encyclopedia class'ı
+//ansiklopedi ödünç alınamayacağı için notborrowable interface'ini implement ediyor
 public class Encyclopedia extends Book implements NotBorrowable {
 
     public Encyclopedia(String bookType, String bookName, String bookAuthor, int bookYear, boolean isBorrowed, Integer borrowerId) {
