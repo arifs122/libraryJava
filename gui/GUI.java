@@ -3,6 +3,7 @@ package gui;
 import database.BookDatabase;
 import database.MemberDatabase;
 import factories.BookFactory;
+import factories.MemberFactory;
 import interfaces.NotBorrowable;
 import model.Book;
 import model.Member;
@@ -416,7 +417,7 @@ public class GUI {
 					String name = memberNameTxt.getText();
 					int age = Integer.parseInt(memberAgeTxt.getText());
 					String gender = Objects.requireNonNull(genderComboBox.getSelectedItem()).toString();
-					Member member = new Member(name, age, gender, true);
+					Member member = MemberFactory.create(name,age,gender,true);
 					MemberDatabase.insertMember(member);
 					refreshMemberTable();
 					JOptionPane.showMessageDialog(null, "Member added successfully.");
