@@ -12,7 +12,7 @@ import java.sql.*;
 
 
 public class MemberDatabase {
-    private static final String URL = "jdbc:sqlite:members1.db";
+    private static final String URL = "jdbc:sqlite:members.db";
     private static Connection conn;
     //database'e bağlanma
     public static void connect() {

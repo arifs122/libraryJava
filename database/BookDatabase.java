@@ -11,7 +11,7 @@ Bağlanma,tablo hazırlama,kitap ekleme, listeleme, güncelleme metodları bulun
 * */
 
 public class BookDatabase {
-	private static final String URL = "jdbc:sqlite:books1.db";
+	private static final String URL = "jdbc:sqlite:books.db";
     private static Connection conn;
     //database'e bağlanma
     public static void connect() {
