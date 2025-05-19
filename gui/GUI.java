@@ -10,6 +10,7 @@ import model.Member;
 import util.IconHelper;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.AttributeSet;
@@ -99,6 +100,7 @@ public class GUI {
 		DefaultTableModel bookModel = BookDatabase.listAllBooks();
 		menuBooksTable = new JTable(bookModel); // artık global değişken
 		menuBooksTable.setDefaultEditor(Object.class, null);
+		centerTableCells(menuBooksTable);
 
 		int[] bookColumnWidths = {30, 80, 150, 120, 70, 70, 80};
 		TableColumnModel bookColModel = menuBooksTable.getColumnModel();
@@ -120,6 +122,7 @@ public class GUI {
 		DefaultTableModel memberModel = MemberDatabase.listMembers();
 		menuMembersTable = new JTable(memberModel); // artık global değişken
 		menuMembersTable.setDefaultEditor(Object.class, null);
+		centerTableCells(menuMembersTable);
 
 		int[] memberColumnWidths = {30, 200, 120, 150, 100};
 		TableColumnModel memberColModel = menuMembersTable.getColumnModel();
@@ -271,6 +274,7 @@ public class GUI {
 
 		DefaultTableModel model = BookDatabase.listAllBooks();
 		allBooksTable = new JTable(model);
+		centerTableCells(allBooksTable);
 
 		//table sutunları artık ayarlanamıyor ve kendimiz büyüklüklerini ayarladık
 		allBooksTable.setDefaultEditor(Object.class, null);
@@ -365,6 +369,7 @@ public class GUI {
 
 		DefaultTableModel model = BookDatabase.listAvailableBooks();
 		availableBookTable = new JTable(model);
+		centerTableCells(availableBookTable);
 		//tabloda istenilen kitaba tıklanarak kitap seçilebiliyor
 		availableBookTable.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
@@ -446,6 +451,7 @@ public class GUI {
 
 		//table sutunları artık ayarlanamıyor ve kendimiz büyüklüklerini ayarladık
 		memberTable.setDefaultEditor(Object.class, null);
+		centerTableCells(memberTable);
 		TableColumnModel columnModel = memberTable.getColumnModel();
 		int[] widths = {20, 150, 60, 80, 60};
 		for (int i = 0; i < widths.length; i++) {
@@ -553,6 +559,7 @@ public class GUI {
 
 		DefaultTableModel model = BookDatabase.listBorrowedBooks();
 		borrowedBookTable = new JTable(model);
+		centerTableCells(borrowedBookTable);
 
 		borrowedBookTable.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
@@ -627,6 +634,7 @@ public class GUI {
 				columnModel.getColumn(i).setPreferredWidth(widths[i]);
 				columnModel.getColumn(i).setResizable(false);
 			}
+			centerTableCells(menuBooksTable);
 		}
 	}
 
@@ -642,6 +650,7 @@ public class GUI {
 				columnModel.getColumn(i).setPreferredWidth(widths[i]);
 				columnModel.getColumn(i).setResizable(false);
 			}
+			centerTableCells(menuMembersTable);
 		}
 	}
 
@@ -660,6 +669,7 @@ public class GUI {
 				columnModel.getColumn(i).setResizable(false);
 			}
 			allBooksTable.setDefaultEditor(Object.class, null); // hücre düzenlemesini engelle
+			centerTableCells(allBooksTable);
 		}
 	}
 	//işlemler sonrası tabloları güncel tutmak için metod
@@ -677,6 +687,7 @@ public class GUI {
 				columnModel.getColumn(i).setResizable(false);
 			}
 			availableBookTable.setDefaultEditor(Object.class, null); // hücre düzenlemesini engelle
+			centerTableCells(availableBookTable);
 		}
 	}
 	//işlemler sonrası tabloları güncel tutmak için metod
@@ -694,6 +705,7 @@ public class GUI {
 				columnModel.getColumn(i).setResizable(false);
 			}
 			borrowedBookTable.setDefaultEditor(Object.class, null); // hücre düzenlemesini engelle
+			centerTableCells(borrowedBookTable);
 		}
 	}
 	//işlemler sonrası tabloları güncel tutmak için metod
@@ -711,6 +723,7 @@ public class GUI {
 				columnModel.getColumn(i).setResizable(false);
 			}
 			memberTable.setDefaultEditor(Object.class, null); // hücre düzenlemesini engelle
+			centerTableCells(memberTable);
 		}
 	}
 	//sadece rakaml girilmesi gereken textboxlara implement edilen metod
@@ -737,6 +750,23 @@ public class GUI {
 			}
 		});
 	}
+
+	private void centerTableCells(JTable table) {
+		// Hücreleri ortalamak için
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+		TableColumnModel columnModel = table.getColumnModel();
+		for (int i = 0; i < columnModel.getColumnCount(); i++) {
+			columnModel.getColumn(i).setCellRenderer(centerRenderer);
+		}
+
+		// Başlıkları ortalamak için
+		DefaultTableCellRenderer headerRenderer = (DefaultTableCellRenderer) table.getTableHeader().getDefaultRenderer();
+		headerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+	}
+
+
+
 	//ana menüde kullanıcıyı bilgilendirme amaçlı butonun metodu
 	private void showAboutMessage() {
 		String message = """
