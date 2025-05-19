@@ -748,6 +748,8 @@ public class GUI {
                 - Encyclopedias are not borrowable.
                 - Members can only borrow 1 book at a time.
                 - You can select your book by clicking to list in borrow menu.
+                - Borrow Status 1 means that that member can borrow a book.
+                - Availability 1 means that that book can be borrowed.
                 - You can surf between input boxes with enter.\s""";
 
 		JTextArea textArea = new JTextArea(message);
