@@ -45,6 +45,8 @@ public class GUI {
 	private JTable availableBookTable;
 	private JTable borrowedBookTable;
 	private JTable memberTable;
+	private JTable menuMembersTable;
+	private JTable menuBooksTable;
 
 
 	// mainde arayüzü başlatmak için çağırılacak metod
@@ -83,9 +85,54 @@ public class GUI {
 	private void createHomePanel() {
 		homePanel = new JPanel(null);
 		homePanel.setBackground(new Color(222, 222, 225));
+
 		WelcomeLabel();
 		addHomeButtons();
+
+		// Kitaplar tablosu başlığı
+		JLabel booksTableTitle = new JLabel("All Books", SwingConstants.CENTER);
+		booksTableTitle.setBounds(580, 90, 180, 30);
+		booksTableTitle.setFont(new Font("Californian FB", Font.BOLD, 15));
+		homePanel.add(booksTableTitle);
+
+		// Kitaplar tablosu
+		DefaultTableModel bookModel = BookDatabase.listAllBooks();
+		menuBooksTable = new JTable(bookModel); // artık global değişken
+		menuBooksTable.setDefaultEditor(Object.class, null);
+
+		int[] bookColumnWidths = {30, 80, 150, 120, 70, 70, 80};
+		TableColumnModel bookColModel = menuBooksTable.getColumnModel();
+		for (int i = 0; i < bookColumnWidths.length; i++) {
+			bookColModel.getColumn(i).setPreferredWidth(bookColumnWidths[i]);
+			bookColModel.getColumn(i).setResizable(false);
+		}
+		JScrollPane booksScroll = new JScrollPane(menuBooksTable);
+		booksScroll.setBounds(380, 110, 600, 140);
+		homePanel.add(booksScroll);
+
+		// Üyeler tablosu başlığı
+		JLabel membersTableTitle = new JLabel("All Members", SwingConstants.CENTER);
+		membersTableTitle.setBounds(580, 250, 180, 30);
+		membersTableTitle.setFont(new Font("Californian FB", Font.BOLD, 15));
+		homePanel.add(membersTableTitle);
+
+		// Üyeler tablosu
+		DefaultTableModel memberModel = MemberDatabase.listMembers();
+		menuMembersTable = new JTable(memberModel); // artık global değişken
+		menuMembersTable.setDefaultEditor(Object.class, null);
+
+		int[] memberColumnWidths = {30, 200, 120, 150, 100};
+		TableColumnModel memberColModel = menuMembersTable.getColumnModel();
+		for (int i = 0; i < memberColumnWidths.length; i++) {
+			memberColModel.getColumn(i).setPreferredWidth(memberColumnWidths[i]);
+			memberColModel.getColumn(i).setResizable(false);
+		}
+
+		JScrollPane membersScroll = new JScrollPane(menuMembersTable);
+		membersScroll.setBounds(380, 270, 600, 140);
+		homePanel.add(membersScroll);
 	}
+
 
 	//ana sayfadaki butonlar oluşturuluyor ve action'ları atanıyor
 	private void addHomeButtons() {
@@ -206,8 +253,7 @@ public class GUI {
 					//işlem gerçekleştiğinde tablolar yenileniyor
 					refreshAllBooksTable();
 					refreshAvailableBookTable();
-					refreshBorrowedBookTable();
-
+					refreshMenuBooksTable();
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(null, "Unable to add the book. Check the details and try again.");
 					ex.printStackTrace();
@@ -298,6 +344,8 @@ public class GUI {
 					refreshAvailableBookTable();
 					refreshBorrowedBookTable();
 					refreshMemberTable();
+					refreshMenuBooksTable();
+					refreshMenuMembersTable();
 					JOptionPane.showMessageDialog(null, "Book borrowed successfully.");
 					bookIdTxt.setText("");
 					borrowerIdTxt.setText("");
@@ -420,6 +468,7 @@ public class GUI {
 					Member member = MemberFactory.create(name,age,gender,true);
 					MemberDatabase.insertMember(member);
 					refreshMemberTable();
+					refreshMenuMembersTable();
 					JOptionPane.showMessageDialog(null, "Member added successfully.");
 					memberNameTxt.setText("");
 					memberAgeTxt.setText("");
@@ -485,6 +534,8 @@ public class GUI {
 					refreshAvailableBookTable();
 					refreshBorrowedBookTable();
 					refreshMemberTable();
+					refreshMenuMembersTable();
+					refreshMenuBooksTable();
 					JOptionPane.showMessageDialog(null, "Book returned successfully.");
 					bookIdTxt.setText("");
 				}catch(Exception ex){
@@ -563,6 +614,37 @@ public class GUI {
 		cardLayout.show(mainPanel, "HomePanel");
 		WelcomeLabel();
 	}
+
+	private void refreshMenuBooksTable() {
+		if (menuBooksTable != null) {
+			DefaultTableModel model = BookDatabase.listAllBooks();
+			menuBooksTable.setModel(model);
+			menuBooksTable.setDefaultEditor(Object.class, null);
+
+			int[] widths = {30, 80, 150, 120, 70, 70, 80};
+			TableColumnModel columnModel = menuBooksTable.getColumnModel();
+			for (int i = 0; i < widths.length; i++) {
+				columnModel.getColumn(i).setPreferredWidth(widths[i]);
+				columnModel.getColumn(i).setResizable(false);
+			}
+		}
+	}
+
+	private void refreshMenuMembersTable() {
+		if (menuMembersTable != null) {
+			DefaultTableModel model = MemberDatabase.listMembers();
+			menuMembersTable.setModel(model);
+			menuMembersTable.setDefaultEditor(Object.class, null);
+
+			int[] widths = {30, 200, 120, 150, 100};
+			TableColumnModel columnModel = menuMembersTable.getColumnModel();
+			for (int i = 0; i < widths.length; i++) {
+				columnModel.getColumn(i).setPreferredWidth(widths[i]);
+				columnModel.getColumn(i).setResizable(false);
+			}
+		}
+	}
+
 	//işlemler sonrası tabloları güncel tutmak için metod
 	private void refreshAllBooksTable() {
 		if (allBooksTable != null) {
@@ -649,7 +731,7 @@ public class GUI {
 			@Override
 			public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
 				if (str == null) return;
-				if (str.matches("[a-zA-Z\\s]+")) { // sadece harfler izinli
+				if (str.matches("[a-zA-ZçÇğĞıİöÖşŞüÜ0-9\\s]+")) { // Türkçe harfler, sayılar ve boşluk
 					super.insertString(offs, str, a);
 				}
 			}
